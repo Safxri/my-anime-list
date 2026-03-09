@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY HUB | Advanced Season Management v6</title>
+    <title>MY HUB | Ultimate v7</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root { --netflix-red: #E50914; --netflix-black: #141414; --card-bg: #181818; --nav-height: 70px; }
         * { box-sizing: border-box; }
-        body { font-family: 'Kanit', sans-serif; background-color: var(--netflix-black); color: white; margin: 0; padding: 0; }
+        body { font-family: 'Kanit', sans-serif; background-color: var(--netflix-black); color: white; margin: 0; padding: 0; overflow-x: hidden; }
 
         /* --- NAVBAR --- */
         nav { background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%); padding: 0 4%; display: flex; align-items: center; height: var(--nav-height); position: fixed; top: 0; width: 100%; z-index: 1000; transition: 0.4s; }
@@ -17,12 +17,14 @@
         .nav-logo { color: var(--netflix-red); font-size: 1.8rem; font-weight: 700; text-decoration: none; }
         .nav-menu { display: flex; list-style: none; gap: 20px; padding: 0; cursor: pointer; font-size: 0.9rem; color: #e5e5e5; }
         .nav-right { display: flex; align-items: center; gap: 15px; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 4px; object-fit: cover; border: 1px solid #444; }
+        .user-nav-box { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px 10px; border-radius: 5px; transition: 0.2s; }
+        .user-nav-box:hover { background: rgba(255,255,255,0.1); }
+        .user-avatar { width: 34px; height: 34px; border-radius: 4px; object-fit: cover; border: 1px solid #444; }
 
-        /* --- ADMIN PANEL (NEW) --- */
+        /* --- ADMIN PANEL --- */
         #admin-panel { display: none; background: #1a1a1a; padding: 25px; border-radius: 12px; margin: 90px 4% 20px; border: 1px dashed var(--netflix-red); }
         .admin-form-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; margin-bottom: 15px; }
-        .admin-season-input { background: #222; padding: 15px; border-radius: 8px; margin-top: 10px; border: 1px solid #333; }
+        .admin-season-section { background: #222; padding: 15px; border-radius: 8px; border: 1px solid #333; }
         .season-entry { display: grid; grid-template-columns: 1fr 2fr auto; gap: 10px; margin-bottom: 8px; }
 
         /* --- CONTENT --- */
@@ -32,19 +34,21 @@
         .card:hover { transform: scale(1.05); z-index: 10; box-shadow: 0 15px 30px rgba(0,0,0,0.6); }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
         .card-info { padding: 12px; }
-
         .admin-tools { position: absolute; top: 8px; right: 8px; display: flex; gap: 5px; z-index: 15; }
         .btn-tool { background: rgba(0,0,0,0.8); color: white; border: 1px solid #444; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; }
 
-        /* --- MODAL --- */
+        /* --- MODALS --- */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-        .modal-content { background: #181818; width: 90%; max-width: 900px; border-radius: 15px; overflow: hidden; position: relative; max-height: 90vh; display: flex; flex-direction: column; }
-        .season-list { padding: 20px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 15px; }
-        .season-item { background: #222; border-radius: 6px; overflow: hidden; border: 1px solid #333; cursor: pointer; transition: 0.3s; }
+        .modal-content { background: #181818; width: 90%; max-width: 600px; border-radius: 15px; overflow: hidden; position: relative; padding: 30px; }
+        .modal-large { max-width: 900px; }
+        .season-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 15px; max-height: 60vh; overflow-y: auto; margin-top: 20px; }
+        .season-item { background: #222; border-radius: 6px; overflow: hidden; border: 1px solid #333; cursor: pointer; text-align: center; }
         .season-item img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
 
-        .btn-red { background: var(--netflix-red); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: 600; }
-        input, select { padding: 10px; background: #333; border: 1px solid #444; color: white; border-radius: 5px; width: 100%; font-family: 'Kanit'; }
+        /* --- INPUTS & BUTTONS --- */
+        input, select { padding: 12px; background: #333; border: 1px solid #444; color: white; border-radius: 5px; width: 100%; font-family: 'Kanit'; margin-bottom: 10px; }
+        .btn-red { background: var(--netflix-red); color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-weight: 600; width: 100%; }
+        .btn-red:hover { background: #b20710; }
         #auth-section { max-width: 400px; margin: 20vh auto; background: rgba(0,0,0,0.85); padding: 50px; border-radius: 10px; text-align: center; }
     </style>
 </head>
@@ -64,58 +68,70 @@
 </nav>
 
 <div id="admin-panel">
-    <h3 style="color:var(--netflix-red); margin:0 0 15px 0;">Admin: จัดการเนื้อหา</h3>
+    <h3 style="color:var(--netflix-red); margin-top:0;">Admin Console</h3>
     <div class="admin-form-row">
         <input type="text" id="adm-title" placeholder="ชื่อเรื่องหลัก">
-        <input type="text" id="adm-img" placeholder="URL ปกหลัก">
+        <input type="text" id="adm-img" placeholder="URL ปกหลัก (2:3)">
         <select id="adm-cat">
             <option value="Anime">Anime</option>
             <option value="Series">Series</option>
             <option value="Movie">Movie</option>
         </select>
-        <button class="btn-red" onclick="addToDatabase()">บันทึกเรื่องใหม่</button>
+        <button class="btn-red" id="adm-save-btn" onclick="addToDatabase()">บันทึกเรื่องใหม่</button>
     </div>
-    
-    <div class="admin-season-input">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <strong style="font-size:0.9rem;">จัดการซีซัน (สำหรับเรื่องที่จะเพิ่ม)</strong>
-            <button class="btn-tool" onclick="addSeasonField()">+ เพิ่มช่องซีซัน</button>
+    <div class="admin-season-section">
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <strong>จัดการซีซันและปกแยก</strong>
+            <button class="btn-tool" onclick="addSeasonField()">+ เพิ่มซีซัน</button>
         </div>
-        <div id="season-fields-container">
-            </div>
+        <div id="season-fields-container"></div>
     </div>
 </div>
 
 <div class="container">
     <div id="auth-section">
         <h1>Sign In</h1>
-        <input type="email" id="email" placeholder="Email" style="margin-bottom:15px;">
-        <input type="password" id="password" placeholder="Password" style="margin-bottom:25px;">
-        <button class="btn-red" style="width:100%" onclick="handleLogin()">Sign In</button>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button class="btn-red" onclick="handleLogin()">Sign In</button>
     </div>
 
     <div id="main-content" style="display: none;">
         <h2 id="cat-title">รายการแนะนำ</h2>
         <div class="content-grid" id="content-display"></div>
-        <h2 style="color: #666; border-top: 1px solid #333; padding-top: 30px;">ประวัติการรับชม</h2>
+        <h2 style="color: #666; border-top: 1px solid #333; padding-top: 30px; margin-top: 50px;">ประวัติการรับชมของคุณ</h2>
         <div class="content-grid" id="watched-display"></div>
     </div>
 </div>
 
 <div id="detail-modal" class="modal">
-    <div class="modal-content">
-        <div style="padding: 25px; border-bottom: 1px solid #333;">
-            <h2 id="modal-title" style="margin:0"></h2>
-            <button onclick="closeModal()" style="position:absolute; right:20px; top:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer;">&times;</button>
-        </div>
+    <div class="modal-content modal-large">
+        <h2 id="modal-title" style="margin:0"></h2>
+        <button onclick="closeModal('detail-modal')" style="position:absolute; right:20px; top:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer;">&times;</button>
         <div class="season-list" id="season-container"></div>
+    </div>
+</div>
+
+<div id="profile-modal" class="modal">
+    <div class="modal-content">
+        <h2 style="margin-top:0">ตั้งค่าโปรไฟล์</h2>
+        <button onclick="closeModal('profile-modal')" style="position:absolute; right:20px; top:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer;">&times;</button>
+        <div style="text-align:center; margin-bottom:20px;">
+            <img id="profile-preview" src="" style="width:100px; height:100px; border-radius:10px; object-fit:cover; border:2px solid var(--netflix-red);">
+        </div>
+        <label style="font-size:0.8rem; color:#aaa;">ชื่อเล่น</label>
+        <input type="text" id="pf-nickname" placeholder="ระบุชื่อของคุณ">
+        <label style="font-size:0.8rem; color:#aaa;">URL รูปโปรไฟล์</label>
+        <input type="text" id="pf-avatar" placeholder="https://...">
+        <button class="btn-red" onclick="saveProfile()">บันทึกการเปลี่ยนแปลง</button>
+        <button style="background:none; border:none; color:#777; width:100%; margin-top:15px; cursor:pointer;" onclick="logout()">ออกจากระบบ</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where, orderBy, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, addDoc, getDocs, query, where, orderBy, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyADNWKhUNqKyF19d-2WBHsHQ1uaZIAN8Bg",
@@ -126,143 +142,105 @@
         appId: "1:1018346930735:web:dd2d015e2a1f0c628b3cda"
     };
 
-    const ADMIN_EMAIL = "tungpanithan1931@gmail.com";
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const ADMIN_EMAIL = "tungpanithan1931@gmail.com";
 
     let masterData = [];
     let watchedList = [];
 
-    // --- ADMIN: Dynamic Season Fields ---
+    // --- USER PROFILE SYSTEM ---
+    async function loadUserProfile(user) {
+        const uDoc = await getDoc(doc(db, "users", user.uid));
+        let userData = { nickname: user.email.split('@')[0], avatar: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" };
+        
+        if(uDoc.exists()){
+            const d = uDoc.data();
+            if(d.nickname) userData.nickname = d.nickname;
+            if(d.avatar) userData.avatar = d.avatar;
+        }
+
+        document.getElementById('user-nav').innerHTML = `
+            <div class="user-nav-box" onclick="openProfileModal()">
+                <span style="font-size:0.9rem; font-weight:500;">${userData.nickname}</span>
+                <img src="${userData.avatar}" class="user-avatar">
+            </div>
+        `;
+        document.getElementById('profile-preview').src = userData.avatar;
+        document.getElementById('pf-nickname').value = userData.nickname;
+        document.getElementById('pf-avatar').value = userData.avatar;
+    }
+
+    window.openProfileModal = () => document.getElementById('profile-modal').style.display = 'flex';
+    
+    window.saveProfile = async () => {
+        const uid = auth.currentUser.uid;
+        const nickname = document.getElementById('pf-nickname').value;
+        const avatar = document.getElementById('pf-avatar').value;
+        await setDoc(doc(db, "users", uid), { nickname, avatar }, { merge: true });
+        alert("อัปเดตโปรไฟล์เรียบร้อย!");
+        location.reload();
+    };
+
+    // --- ADMIN SYSTEM ---
     window.addSeasonField = (name = "", img = "") => {
         const container = document.getElementById('season-fields-container');
         const div = document.createElement('div');
         div.className = 'season-entry';
-        div.innerHTML = `
-            <input type="text" class="s-name" placeholder="ชื่อซีซัน (เช่น SS1)" value="${name}">
-            <input type="text" class="s-img" placeholder="URL ปกซีซันนี้ (ถ้าไม่มีจะใช้ปกหลัก)" value="${img}">
-            <button class="btn-tool" onclick="this.parentElement.remove()" style="background:red">ลบ</button>
-        `;
+        div.innerHTML = `<input type="text" class="s-name" placeholder="SS1" value="${name}"><input type="text" class="s-img" placeholder="URL ปกซีซัน" value="${img}"><button class="btn-tool" onclick="this.parentElement.remove()" style="background:red">ลบ</button>`;
         container.appendChild(div);
     };
 
     window.addToDatabase = async () => {
         const title = document.getElementById('adm-title').value;
-        const mainImg = document.getElementById('adm-img').value;
-        const cat = document.getElementById('adm-cat').value;
-        
+        const image = document.getElementById('adm-img').value;
+        const category = document.getElementById('adm-cat').value;
         const sNames = document.querySelectorAll('.s-name');
         const sImgs = document.querySelectorAll('.s-img');
-        
-        let seasonArray = [];
-        sNames.forEach((el, i) => {
-            if(el.value) {
-                seasonArray.push({
-                    name: el.value,
-                    image: sImgs[i].value || mainImg // ถ้าไม่ใส่รูปซีซัน ให้ใช้รูปหลัก
-                });
-            }
-        });
+        let seasons = [];
+        sNames.forEach((el, i) => { if(el.value) seasons.push({ name: el.value, image: sImgs[i].value || image }); });
 
-        if(!title || !mainImg) return alert("กรุณากรอกข้อมูลหลัก");
-
-        try {
-            await addDoc(collection(db, "all_anime"), {
-                title, image: mainImg, category: cat,
-                seasons: seasonArray.length > 0 ? seasonArray : [{name: "Standard", image: mainImg}],
-                created: new Date()
-            });
-            alert("บันทึกสำเร็จ!");
-            location.reload();
-        } catch (e) { alert(e.message); }
+        if(!title || !image) return alert("ระบุข้อมูลให้ครบ");
+        await addDoc(collection(db, "all_anime"), { title, image, category, seasons, created: new Date() });
+        location.reload();
     };
 
-    // --- ADMIN: เพิ่มซีซันและปกทีหลัง ---
-    window.manageExistingSeasons = async (id) => {
+    window.editItem = (id) => {
         const item = masterData.find(x => x.id === id);
-        // เคลียร์ค่าเก่าใน Admin Panel แล้วใส่ค่าเรื่องที่จะแก้ลงไป
         document.getElementById('adm-title').value = item.title;
         document.getElementById('adm-img').value = item.image;
         document.getElementById('adm-cat').value = item.category;
         document.getElementById('season-fields-container').innerHTML = "";
-        
         item.seasons.forEach(s => addSeasonField(s.name, s.image));
         
-        // ปรับปุ่มบันทึกให้เป็นปุ่มอัปเดต
-        const btn = document.querySelector('#admin-panel .btn-red');
-        btn.innerText = "อัปเดตข้อมูลเรื่องนี้";
+        const btn = document.getElementById('adm-save-btn');
+        btn.innerText = "บันทึกการแก้ไข";
         btn.onclick = async () => {
             const sNames = document.querySelectorAll('.s-name');
             const sImgs = document.querySelectorAll('.s-img');
-            let newSeasons = [];
-            sNames.forEach((el, i) => {
-                if(el.value) newSeasons.push({ name: el.value, image: sImgs[i].value || item.image });
-            });
-
-            await updateDoc(doc(db, "all_anime", id), {
-                title: document.getElementById('adm-title').value,
-                image: document.getElementById('adm-img').value,
-                category: document.getElementById('adm-cat').value,
-                seasons: newSeasons
-            });
-            alert("อัปเดตเรียบร้อย!");
+            let newS = [];
+            sNames.forEach((el, i) => { if(el.value) newS.push({ name: el.value, image: sImgs[i].value || document.getElementById('adm-img').value }); });
+            await updateDoc(doc(db, "all_anime", id), { title: document.getElementById('adm-title').value, image: document.getElementById('adm-img').value, category: document.getElementById('adm-cat').value, seasons: newS });
             location.reload();
         };
         window.scrollTo(0,0);
-        alert("คุณสามารถเพิ่ม/แก้ไขซีซันและรูปปกได้ที่แผง Admin ด้านบนครับ");
     };
 
-    // --- UI: แสดงผล ---
-    window.openDetails = (id) => {
-        const item = masterData.find(x => x.id === id);
-        document.getElementById('modal-title').innerText = item.title;
-        const container = document.getElementById('season-container');
-        container.innerHTML = "";
-
-        item.seasons.forEach(s => {
-            const isDone = watchedList.includes(`${item.title}|${s.name}`);
-            container.innerHTML += `
-                <div class="season-item" onclick="markDone('${item.id}', '${s.name}', '${s.image}')">
-                    <img src="${s.image}">
-                    <div style="padding:10px; text-align:center;">
-                        <div style="font-weight:500;">${s.name}</div>
-                        ${isDone ? '<small style="color:#2ed573;">✓ ชมแล้ว</small>' : '<small style="color:#666;">บันทึกการดู</small>'}
-                    </div>
-                </div>`;
-        });
-        document.getElementById('detail-modal').style.display = 'flex';
-    };
-
-    window.markDone = async (id, sName, sImg) => {
-        const item = masterData.find(x => x.id === id);
-        if(watchedList.includes(`${item.title}|${sName}`)) return;
-        await addDoc(collection(db, "user_watched"), {
-            uid: auth.currentUser.uid,
-            mainTitle: item.title,
-            seasonName: sName,
-            image: sImg,
-            timestamp: new Date()
-        });
-        location.reload();
-    };
-
-    // --- ฟังก์ชันพื้นฐานอื่นๆ ---
+    // --- CORE LOGIC ---
     async function loadMainData(uid) {
         try {
-            const qW = query(collection(db, "user_watched"), where("uid", "==", uid), orderBy("timestamp", "desc"));
-            const snapW = await getDocs(qW);
+            const snapW = await getDocs(query(collection(db, "user_watched"), where("uid", "==", uid), orderBy("timestamp", "desc")));
             watchedList = [];
-            const wDisplay = document.getElementById('watched-display');
-            wDisplay.innerHTML = "";
+            const wDisp = document.getElementById('watched-display');
+            wDisp.innerHTML = "";
             snapW.forEach(d => {
                 const data = d.data();
                 watchedList.push(`${data.mainTitle}|${data.seasonName}`);
-                wDisplay.innerHTML += `<div class="card" style="opacity:0.6; transform:scale(0.9);"><img src="${data.image}"><div class="card-info"><div>${data.mainTitle}</div><small style="color:#2ed573">${data.seasonName} ✓</small></div></div>`;
+                wDisp.innerHTML += `<div class="card" style="opacity:0.6; transform:scale(0.9);"><img src="${data.image}"><div class="card-info"><div>${data.mainTitle}</div><small style="color:#2ed573">${data.seasonName} ✓</small></div></div>`;
             });
 
-            const qA = query(collection(db, "all_anime"), orderBy("created", "desc"));
-            const snapA = await getDocs(qA);
+            const snapA = await getDocs(query(collection(db, "all_anime"), orderBy("created", "desc")));
             masterData = [];
             snapA.forEach(d => masterData.push({ id: d.id, ...d.data() }));
             filterCategory('All');
@@ -277,7 +255,7 @@
         filtered.forEach(item => {
             display.innerHTML += `
                 <div class="card">
-                    ${isAdmin ? `<div class="admin-tools"><button class="btn-tool" onclick="manageExistingSeasons('${item.id}')">Edit Season/Cover</button></div>` : ''}
+                    ${isAdmin ? `<div class="admin-tools"><button class="btn-tool" onclick="editItem('${item.id}')">Edit</button><button class="btn-tool" style="color:red" onclick="deleteItem('${item.id}')">Del</button></div>` : ''}
                     <img src="${item.image}" onclick="openDetails('${item.id}')">
                     <div class="card-info" onclick="openDetails('${item.id}')">
                         <div style="color:var(--netflix-red); font-size:10px; font-weight:bold;">${item.category}</div>
@@ -287,13 +265,28 @@
         });
     };
 
-    window.handleLogin = () => {
-        const e = document.getElementById('email').value;
-        const p = document.getElementById('password').value;
-        signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
+    window.openDetails = (id) => {
+        const item = masterData.find(x => x.id === id);
+        document.getElementById('modal-title').innerText = item.title;
+        const container = document.getElementById('season-container');
+        container.innerHTML = "";
+        item.seasons.forEach(s => {
+            const isDone = watchedList.includes(`${item.title}|${s.name}`);
+            container.innerHTML += `<div class="season-item" onclick="markDone('${item.id}', '${s.name}', '${s.image}')"><img src="${s.image}"><div style="padding:10px;"><div style="font-weight:500;">${s.name}</div>${isDone ? '<small style="color:#2ed573">✓ ชมแล้ว</small>' : '<small style="color:#666">บันทึกชม</small>'}</div></div>`;
+        });
+        document.getElementById('detail-modal').style.display = 'flex';
     };
 
-    window.closeModal = () => document.getElementById('detail-modal').style.display = 'none';
+    window.markDone = async (id, sName, sImg) => {
+        const item = masterData.find(x => x.id === id);
+        if(watchedList.includes(`${item.title}|${sName}`)) return;
+        await addDoc(collection(db, "user_watched"), { uid: auth.currentUser.uid, mainTitle: item.title, seasonName: sName, image: sImg, timestamp: new Date() });
+        location.reload();
+    };
+
+    window.deleteItem = async (id) => { if(confirm("ลบเรื่องนี้?")) { await deleteDoc(doc(db, "all_anime", id)); location.reload(); } };
+    window.closeModal = (mId) => document.getElementById(mId).style.display = 'none';
+    window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value).catch(e => alert(e.message));
     window.logout = () => signOut(auth).then(() => location.reload());
 
     onAuthStateChanged(auth, user => {
@@ -301,16 +294,8 @@
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
             if(user.email === ADMIN_EMAIL) document.getElementById('admin-panel').style.display = 'block';
+            loadUserProfile(user);
             loadMainData(user.uid);
-            
-            // แสดงโปรไฟล์แบบย่อ
-            document.getElementById('user-nav').innerHTML = `
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span style="font-size:0.8rem;">${user.email.split('@')[0]}</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" class="user-avatar">
-                </div>
-                <button onclick="logout()" style="background:none; border:none; color:#777; font-size:11px; cursor:pointer; margin-left:10px;">LOGOUT</button>
-            `;
         } else {
             document.getElementById('auth-section').style.display = 'block';
         }
