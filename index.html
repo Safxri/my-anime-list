@@ -12,18 +12,15 @@
             --card-bg: #181818;
             --text-color: #FFFFFF;
             --nav-height: 70px;
-            --transition: all 0.3s ease;
         }
 
         * { box-sizing: border-box; }
-
         body {
             font-family: 'Kanit', sans-serif;
             background-color: var(--netflix-black);
             color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            scroll-behavior: smooth; /* ทำให้เวลาคลิกเมนูแล้วเลื่อนนุ่มนวล */
+            margin: 0; padding: 0;
+            scroll-behavior: smooth;
         }
 
         /* --- MODERN NAVBAR --- */
@@ -34,55 +31,37 @@
             align-items: center;
             height: var(--nav-height);
             position: fixed;
-            top: 0;
-            width: 100%;
+            top: 0; width: 100%;
             z-index: 1000;
-            transition: var(--transition);
+            transition: 0.4s;
         }
         nav.scrolled { background-color: var(--netflix-black); box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
 
         .nav-left { display: flex; align-items: center; gap: 30px; flex-grow: 1; }
-        .nav-logo { color: var(--netflix-red); font-size: 1.8rem; font-weight: 700; text-decoration: none; letter-spacing: -1px; }
+        .nav-logo { color: var(--netflix-red); font-size: 1.8rem; font-weight: 700; text-decoration: none; }
 
         .nav-menu { display: flex; list-style: none; gap: 20px; margin: 0; padding: 0; }
-        .nav-menu li a { 
-            color: #E5E5E5; 
-            text-decoration: none; 
-            font-size: 0.9rem; 
-            font-weight: 400;
-            transition: var(--transition);
-        }
-        .nav-menu li a:hover { color: #B3B3B3; }
+        .nav-menu li a { color: #E5E5E5; text-decoration: none; font-size: 0.9rem; }
 
-        .nav-right { display: flex; align-items: center; gap: 20px; }
-        .user-profile { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            cursor: pointer; 
-            padding: 5px 10px;
-            border-radius: 20px;
-            transition: var(--transition);
-        }
-        .user-profile:hover { background: rgba(255,255,255,0.1); }
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .user-avatar { width: 34px; height: 34px; border-radius: 4px; object-fit: cover; border: 1.5px solid #444; }
 
         /* --- MODAL --- */
         .modal {
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; 
-            width: 100%; height: 100%; background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(5px); align-items: center; justify-content: center;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+            align-items: center; justify-content: center;
         }
         .modal-content {
             background: #181818; padding: 40px; border-radius: 12px;
-            width: 90%; max-width: 420px; text-align: center; border: 1px solid #333;
+            width: 90%; max-width: 400px; text-align: center;
         }
 
         /* --- CONTENT & GRID --- */
         .container { padding: 40px 4%; margin-top: 60px; }
-        
         section { padding-top: 40px; margin-bottom: 50px; }
-        h3 { font-weight: 500; font-size: 1.6rem; margin-bottom: 25px; color: #FFF; }
+        h3 { font-weight: 500; font-size: 1.6rem; margin-bottom: 25px; }
 
         .content-grid {
             display: grid;
@@ -91,46 +70,26 @@
         }
 
         .card {
-            background: var(--card-bg);
-            border-radius: 6px;
-            overflow: hidden;
-            position: relative;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            background: var(--card-bg); border-radius: 6px; overflow: hidden;
+            position: relative; transition: 0.4s; cursor: pointer;
         }
         .card:hover { transform: scale(1.08); z-index: 5; }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
 
         .card-info {
-            padding: 15px 10px 10px;
+            padding: 10px;
             background: linear-gradient(to top, rgba(0,0,0,1) 30%, transparent 100%);
-            position: absolute;
-            bottom: 0; width: 100%;
-        }
-        .card-info h4 { margin: 0 0 8px; font-size: 0.85rem; font-weight: 500; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
-
-        /* --- BUTTONS --- */
-        .btn { border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-family: 'Kanit'; font-weight: 500; transition: var(--transition); }
-        .btn-red { background: var(--netflix-red); color: white; font-size: 0.8rem; }
-        .btn-red:hover { background: #ff1f29; transform: scale(1.02); }
-        .btn-watched { background: #2ed573; color: white; cursor: default; font-size: 0.8rem; }
-
-        input {
-            padding: 14px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #333;
-            background: #333; color: white; width: 100%; font-family: 'Kanit';
+            position: absolute; bottom: 0; width: 100%;
         }
 
-        #auth-section { 
-            max-width: 400px; margin: 15vh auto; background: rgba(0,0,0,0.8); 
-            padding: 50px; border-radius: 8px; text-align: center;
-        }
+        /* --- AUTH & BUTTONS --- */
+        #auth-section { max-width: 400px; margin: 15vh auto; background: rgba(0,0,0,0.8); padding: 50px; border-radius: 8px; text-align: center; }
+        input { padding: 14px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #333; background: #333; color: white; width: 100%; font-family: 'Kanit'; }
+        .btn { border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-family: 'Kanit'; font-weight: 500; width: 100%; }
+        .btn-red { background: var(--netflix-red); color: white; }
+        .btn-watched { background: #2ed573; color: white; cursor: default; }
 
-        /* Responsive Mobile */
-        @media (max-width: 768px) {
-            .nav-menu { display: none; } /* ซ่อนเมนูตัวหนังสือบนมือถือ */
-            .content-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
-        }
+        @media (max-width: 768px) { .nav-menu { display: none; } }
     </style>
 </head>
 <body>
@@ -140,8 +99,6 @@
         <a href="#" class="nav-logo">MY HUB</a>
         <ul class="nav-menu">
             <li><a href="#home">หน้าหลัก</a></li>
-            <li><a href="#home">ภาพยนตร์</a></li>
-            <li><a href="#home">ซีรีส์</a></li>
             <li><a href="#my-list">รายการของฉัน</a></li>
         </ul>
     </div>
@@ -152,13 +109,13 @@
     <div class="modal-content">
         <h2>ตั้งค่าโปรไฟล์</h2>
         <img id="avatar-preview" src="" class="user-avatar" style="width:100px; height:100px; margin-bottom:15px;">
-        <label style="display:block; background:#444; padding:10px; cursor:pointer; margin-bottom:15px; font-size:0.8rem;">
+        <label style="display:block; background:#444; padding:10px; cursor:pointer; margin-bottom:15px; font-size:0.8rem; border-radius:4px;">
             📁 อัปโหลดรูปจากเครื่อง
             <input type="file" id="file-input" accept="image/*" style="display:none;">
         </label>
         <input type="text" id="nickname-input" placeholder="ชื่อเล่น">
-        <button class="btn btn-red" id="save-btn" onclick="saveProfile()" style="width:100%">บันทึก</button>
-        <button class="btn" onclick="closeModal()" style="background:none; color:#aaa; width:100%; margin-top:10px;">ปิดหน้าต่าง</button>
+        <button class="btn btn-red" id="save-btn" onclick="saveProfile()">บันทึก</button>
+        <button class="btn" onclick="closeModal()" style="background:none; color:#aaa; margin-top:10px;">ยกเลิก</button>
     </div>
 </div>
 
@@ -167,7 +124,7 @@
         <h2 style="margin-bottom:30px;">เข้าสู่ระบบ</h2>
         <input type="email" id="email" placeholder="อีเมล">
         <input type="password" id="password" placeholder="รหัสผ่าน">
-        <button class="btn btn-red" style="width:100%; padding:15px;" onclick="handleLogin()">เข้าสู่ระบบ</button>
+        <button class="btn btn-red" onclick="handleLogin()">เข้าสู่ระบบ</button>
         <p style="font-size:0.8rem; color:#888; margin-top:20px;">ยังไม่มีบัญชี? <a href="#" onclick="handleSignUp()" style="color:#FFF;">สมัครเลย</a></p>
     </div>
 
@@ -176,9 +133,7 @@
             <h3 id="welcome-txt">✨ แนะนำสำหรับคุณ</h3>
             <div class="content-grid" id="admin-list"></div>
         </section>
-
         <hr style="border: 0.5px solid #222; margin: 50px 0;">
-
         <section id="my-list">
             <h3>✅ รายการที่คุณดูจบแล้ว</h3>
             <div class="content-grid" id="my-watched-list"></div>
@@ -209,16 +164,25 @@
     let watchedTitles = [];
     let userProfile = { nickname: "", avatar: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" };
 
-    // --- NAVBAR EFFECT ---
-    window.onscroll = () => {
-        const nav = document.getElementById('navbar');
-        window.pageYOffset > 50 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled');
+    // --- ตรึงฟังก์ชันเข้ากับ Window เพื่อให้ HTML เรียกใช้ได้ ---
+    window.handleLogin = async () => {
+        const e = document.getElementById('email').value;
+        const p = document.getElementById('password').value;
+        try { await signInWithEmailAndPassword(auth, e, p); } catch (err) { alert("ข้อมูลไม่ถูกต้อง"); }
     };
 
-    // --- PROFILE LOGIC ---
-    document.getElementById('file-input').onchange = e => {
-        const [file] = e.target.files;
-        if (file) document.getElementById('avatar-preview').src = URL.createObjectURL(file);
+    window.handleSignUp = async () => {
+        const e = document.getElementById('email').value;
+        const p = document.getElementById('password').value;
+        try { await createUserWithEmailAndPassword(auth, e, p); alert("สมัครสำเร็จ!"); } catch (err) { alert(err.message); }
+    };
+
+    window.logout = () => {
+        signOut(auth).then(() => {
+            // ล้างข้อมูล UI ทันทีเมื่อ Logout
+            document.getElementById('user-nav').innerHTML = "";
+            location.reload(); 
+        });
     };
 
     window.openModal = () => {
@@ -243,43 +207,33 @@
             }
             await setDoc(doc(db, "users", user.uid), { nickname: nick, avatar: url });
             location.reload();
-        } catch (e) { alert("Error: " + e.message); }
+        } catch (e) { alert(e.message); }
     };
 
-    // --- AUTH & DATA ---
-    window.handleLogin = async () => {
-        const e = document.getElementById('email').value;
-        const p = document.getElementById('password').value;
-        try { await signInWithEmailAndPassword(auth, e, p); } catch (err) { alert("ข้อมูลไม่ถูกต้อง"); }
+    window.markAsWatched = async (t, i) => {
+        await addDoc(collection(db, "user_watched"), { uid: auth.currentUser.uid, animeName: t, image: i, timestamp: new Date() });
+        loadAll(auth.currentUser.uid);
     };
 
-    window.handleSignUp = async () => {
-        const e = document.getElementById('email').value;
-        const p = document.getElementById('password').value;
-        try { await createUserWithEmailAndPassword(auth, e, p); alert("สมัครสำเร็จ!"); } catch (err) { alert(err.message); }
-    };
-
-    window.logout = () => signOut(auth);
-
+    // --- DATA LOADING ---
     async function loadAll(uid) {
         const uDoc = await getDoc(doc(db, "users", uid));
         if (uDoc.exists()) userProfile = uDoc.data();
 
-        document.getElementById('welcome-txt').innerText = `✨ ยินดีต้อนรับคุณ ${userProfile.nickname || 'นักดู'}`;
         document.getElementById('user-nav').innerHTML = `
             <div class="user-profile" onclick="openModal()">
                 <span style="font-size:0.85rem;">${userProfile.nickname || auth.currentUser.email}</span>
                 <img src="${userProfile.avatar}" class="user-avatar">
             </div>
-            <button onclick="logout()" style="background:none; border:none; color:red; cursor:pointer; font-size:11px;">ออกระบบ</button>
+            <button onclick="logout()" style="background:none; border:none; color:red; cursor:pointer; font-size:11px; margin-left:10px;">ออกระบบ</button>
         `;
 
-        // Watch List
         const qW = query(collection(db, "user_watched"), where("uid", "==", uid));
         const snapW = await getDocs(qW);
         const listW = document.getElementById('my-watched-list');
         listW.innerHTML = "";
         watchedTitles = [];
+        
         snapW.forEach(doc => {
             const d = doc.data();
             if(!watchedTitles.includes(d.animeName)) {
@@ -288,7 +242,6 @@
             }
         });
 
-        // Admin Recommend
         const snapA = await getDocs(collection(db, "all_anime"));
         const listA = document.getElementById('admin-list');
         listA.innerHTML = "";
@@ -299,8 +252,8 @@
                 <div class="card">
                     <img src="${d.image}">
                     <div class="card-info">
-                        <h4>${d.title}</h4>
-                        ${isW ? `<button class="btn btn-watched" style="width:100%">ดูจบแล้ว</button>` : `<button class="btn btn-red" style="width:100%" onclick="markAsWatched('${d.title}','${d.image}')">ดูจบแล้ว</button>`}
+                        <h4 style="margin-bottom:5px;">${d.title}</h4>
+                        ${isW ? `<button class="btn btn-watched" style="padding:5px; font-size:11px;">ดูจบแล้ว</button>` : `<button class="btn btn-red" style="padding:5px; font-size:11px;" onclick="markAsWatched('${d.title}','${d.image}')">ดูจบแล้ว</button>`}
                     </div>
                 </div>`;
         });
@@ -314,12 +267,18 @@
         } else {
             document.getElementById('auth-section').style.display = 'block';
             document.getElementById('main-content').style.display = 'none';
+            document.getElementById('user-nav').innerHTML = ""; // ล้างข้อมูลโปรไฟล์ที่ค้าง
         }
     });
 
-    window.markAsWatched = async (t, i) => {
-        await addDoc(collection(db, "user_watched"), { uid: auth.currentUser.uid, animeName: t, image: i, timestamp: new Date() });
-        loadAll(auth.currentUser.uid);
+    window.onscroll = () => {
+        const nav = document.getElementById('navbar');
+        window.pageYOffset > 50 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled');
+    };
+    
+    document.getElementById('file-input').onchange = e => {
+        const [file] = e.target.files;
+        if (file) document.getElementById('avatar-preview').src = URL.createObjectURL(file);
     };
 </script>
 </body>
