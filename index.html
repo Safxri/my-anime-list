@@ -2,51 +2,303 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>Anime Tracker | รวมพลคนรักอนิเมะ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Tracker | รวมพลคนรักอนิเมะ (Netflix Style)</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&display=swap" rel="stylesheet">
     <style>
-        :root { --main-color: #ff4757; --bg-color: #2f3542; }
-        body { font-family: 'Kanit', sans-serif; background: var(--bg-color); color: white; margin: 0; }
-        nav { background: #1e2229; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
-        .container { max-width: 1000px; margin: auto; padding: 20px; }
+        /* --- NETFLIX-INSPIRED DARK THEME --- */
+        :root {
+            --netflix-red: #E50914; /* สีแดง Netflix */
+            --netflix-black: #141414; /* สีดำพื้นหลัง Netflix */
+            --netflix-dark-gray: #181818; /* สีดำของการ์ด */
+            --text-color: #FFFFFF;
+            --text-muted: #B3B3B3; /* สีเทาสำหรับตัวหนังสือที่ไม่สำคัญ */
+            --card-border-radius: 4px; /* มุมโค้งมนเล็กน้อยแบบ Netflix */
+            --transition-speed: 0.3s;
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--netflix-black);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased; /* ทำให้ตัวหนังสือคมชัด */
+        }
+
+        /* --- NAVIGATION (NETFLIX STYLE) --- */
+        nav {
+            background-color: rgba(0, 0, 0, 0.7); /* ดำโปร่งแสง */
+            padding: 1rem 4%; /* ระยะห่างซ้ายขวา 4% แบบ Netflix */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed; /* ตรึงเมนูไว้ด้านบน */
+            top: 0;
+            width: 100%;
+            z-index: 1000; /* ให้อยู่เหนือเนื้อหาอื่น */
+            box-sizing: border-box;
+            transition: background-color var(--transition-speed);
+        }
+        nav.scrolled {
+            background-color: var(--netflix-black); /* เมื่อเลื่อนจอให้เป็นสีดำทึบ */
+        }
+
+        #nav-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--netflix-red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        #user-info {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        #user-info button {
+            background: none;
+            border: 1px solid var(--text-muted);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: 'Kanit';
+            font-size: 0.8rem;
+            transition: border-color var(--transition-speed), color var(--transition-speed);
+        }
+        #user-info button:hover {
+            border-color: var(--text-color);
+            color: var(--text-color);
+        }
+
+        /* --- CONTAINER --- */
+        .container {
+            max-width: 100%; /* เต็มความกว้างจอ */
+            margin-top: 80px; /* เว้นระยะจาก nav ที่ตรึงไว้ */
+            padding: 20px 4%; /* ระยะห่างซ้ายขวา 4% */
+            box-sizing: border-box;
+        }
+
+        h3 {
+            font-weight: 500;
+            font-size: 1.4rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        /* --- ANIME GRID & CARDS (NETFLIX STYLE) --- */
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* ปรับขนาดการ์ดให้เล็กลงเล็กน้อย */
+            gap: 10px; /* ช่องว่างระหว่างการ์ดแคบลง */
+        }
+
+        .anime-card {
+            background-color: var(--netflix-dark-gray);
+            border-radius: var(--card-border-radius);
+            overflow: hidden;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            cursor: pointer;
+            position: relative;
+        }
         
-        /* การ์ดอนิเมะ */
-        .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        .anime-card { background: #3f4451; border-radius: 10px; overflow: hidden; transition: 0.3s; position: relative; }
-        .anime-card:hover { transform: translateY(-5px); }
-        .anime-card img { width: 100%; height: 250px; object-fit: cover; }
-        .anime-info { padding: 15px; }
+        /* Effect เมื่อ Hover (ขยายใหญ่ขึ้นเล็กน้อยแบบ Netflix) */
+        .anime-card:hover {
+            transform: scale(1.05);
+            z-index: 10; /* ให้การ์ดที่ขยายอยู่เหนือการ์ดอื่น */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .anime-card img {
+            width: 100%;
+            height: 250px; /* ความสูงคงที่ */
+            object-fit: cover; /* ให้รูปเต็มกรอบ */
+            border-bottom: 2px solid transparent; /* เตรียมเส้นใต้ */
+            transition: border-color var(--transition-speed);
+        }
+        .anime-card:hover img {
+            border-color: var(--netflix-red); /* เส้นใต้สีแดงเมื่อ Hover */
+        }
+
+        .anime-info {
+            padding: 10px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); /* ไล่สีดำจากล่างขึ้นบน */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .anime-info h4 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-color);
+            overflow: hidden;
+            text-overflow: ellipsis; /* ใส่ ... ถ้าชื่อยาวเกิน */
+            white-space: nowrap;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: 'Kanit';
+            font-weight: 500;
+            font-size: 1rem;
+            transition: background-color var(--transition-speed), transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .btn:active {
+            transform: scale(0.98); /* Effect เมื่อกด */
+        }
+
+        .btn-add {
+            background-color: var(--netflix-red);
+            color: white;
+            width: 100%; /* เต็มความกว้างการ์ด */
+            margin-top: 10px;
+        }
+        .btn-add:hover {
+            background-color: #ff1f29; /* แดงสว่างขึ้นเมื่อ Hover */
+        }
+
+        /* --- AUTH SECTION (NETFLIX STYLE LOGIN) --- */
+        #auth-section {
+            text-align: center;
+            margin-top: 10vh; /* ให้อยู่กลางจอ */
+            background-color: rgba(0,0,0,0.75); /* ดำโปร่งแสง */
+            padding: 60px;
+            border-radius: 4px;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #auth-section h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        input {
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background-color: #333;
+            color: white;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: 'Kanit';
+            font-size: 1rem;
+        }
+        input:focus {
+            outline: none;
+            border-color: #e87c03; /* สีส้มเมื่อ Focus แบบ Netflix */
+            background-color: #444;
+        }
+
+        #auth-section .btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+        }
+        #auth-section .btn-login {
+            background-color: var(--netflix-red);
+            color: white;
+        }
+        #auth-section .btn-signup {
+            background-color: #333;
+            color: white;
+            margin-top: 10px;
+        }
+        #auth-section .btn-signup:hover {
+            background-color: #444;
+        }
         
-        /* ปุ่มต่างๆ */
-        .btn { border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; width: 100%; font-family: 'Kanit'; }
-        .btn-add { background: var(--main-color); color: white; }
-        
-        /* หน้า Login */
-        #auth-section { text-align: center; margin-top: 100px; }
-        input { padding: 10px; border-radius: 5px; border: none; margin: 5px; width: 250px; }
+        #auth-section p {
+            color: var(--text-muted);
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+
+        /* --- SCROLLBAR CUSTOMIZATION --- */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--netflix-black);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* --- HR SEPARATOR --- */
+        hr {
+            margin: 60px 0;
+            border: 0;
+            border-top: 1px solid #333;
+        }
+
+        /* --- LOGOUT BUTTON IN NAV --- */
+        #user-info button.btn-logout {
+            background-color: var(--netflix-red);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 2px;
+            font-size: 0.9rem;
+        }
+        #user-info button.btn-logout:hover {
+            background-color: #ff1f29;
+        }
+
     </style>
 </head>
 <body>
 
-<nav>
-    <div style="font-size: 1.5rem; font-weight: bold; color: var(--main-color);">ANIME TRACKER</div>
-    <div id="user-info">กำลังโหลด...</div>
+<nav id="navbar">
+    <a href="#" id="nav-logo">ANIME TRACKER</a>
+    <div id="user-info">กรุณาล็อกอิน</div>
 </nav>
 
 <div class="container">
     <div id="auth-section">
-        <h2>เข้าสู่ระบบเพื่อบันทึกอนิเมะของคุณ</h2>
-        <input type="email" id="email" placeholder="อีเมล">
-        <input type="password" id="password" placeholder="รหัสผ่าน"> <br>
-        <button class="btn btn-add" style="width: 120px;" onclick="handleSignUp()">สมัครสมาชิก</button>
-        <button class="btn" style="width: 120px; background: #747d8c; color:white;" onclick="handleLogin()">เข้าสู่ระบบ</button>
+        <h2>เข้าสู่ระบบ</h2>
+        <div class="input-group">
+            <input type="email" id="email" placeholder="อีเมล">
+        </div>
+        <div class="input-group">
+            <input type="password" id="password" placeholder="รหัสผ่าน">
+        </div>
+        <button class="btn btn-login" onclick="handleLogin()">เข้าสู่ระบบ</button>
+        <button class="btn btn-signup" onclick="handleSignUp()">สมัครสมาชิกใหม่</button>
+        <p>บันทึกอนิเมะที่คุณชื่นชอบได้ง่ายๆ</p>
     </div>
 
     <div id="main-content" style="display: none;">
         <h3>✨ อนิเมะแนะนำจาก Admin</h3>
         <div class="anime-grid" id="admin-list"></div>
 
-        <hr style="margin: 40px 0; border: 0.5px solid #57606f;">
+        <hr>
 
         <h3>✅ เรื่องที่ฉันดูจบแล้ว</h3>
         <div class="anime-grid" id="my-watched-list"></div>
@@ -77,6 +329,7 @@
     window.handleSignUp = async () => {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
+        if(!email || !password) { alert("กรุณากรอกอีเมลและรหัสผ่าน"); return; }
         try {
             await createUserWithEmailAndPassword(auth, email, password);
             alert("สมัครสมาชิกสำเร็จ!");
@@ -86,6 +339,7 @@
     window.handleLogin = async () => {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
+        if(!email || !password) { alert("กรุณากรอกอีเมลและรหัสผ่าน"); return; }
         try {
             await signInWithEmailAndPassword(auth, email, password);
             alert("เข้าสู่ระบบสำเร็จ!");
@@ -121,7 +375,7 @@
         querySnapshot.forEach((doc) => {
             const data = doc.data();
             listDiv.innerHTML += `
-                <div class="anime-card">
+                <div class="anime-card card-watched">
                     <img src="${data.image}">
                     <div class="anime-info"><h4>${data.animeName} ✅</h4></div>
                 </div>`;
@@ -133,7 +387,7 @@
         if (user) {
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
-            document.getElementById('user-info').innerHTML = `${user.email} | <button onclick="logout()" style="background:none; border:none; color:white; cursor:pointer; text-decoration:underline;">ออกระบบ</button>`;
+            document.getElementById('user-info').innerHTML = `<span>${user.email}</span><button class="btn-logout" onclick="logout()">ออกระบบ</button>`;
             loadAdminAnime();
             loadUserWatched(user.uid);
         } else {
@@ -146,15 +400,28 @@
     window.markAsWatched = async (animeName, imageUrl) => {
         const user = auth.currentUser;
         if(!user) return;
-        await addDoc(collection(db, "user_watched"), {
-            uid: user.uid,
-            animeName: animeName,
-            image: imageUrl,
-            timestamp: new Date()
-        });
-        alert("บันทึกสำเร็จ!");
-        loadUserWatched(user.uid);
+        try {
+            await addDoc(collection(db, "user_watched"), {
+                uid: user.uid,
+                animeName: animeName,
+                image: imageUrl,
+                timestamp: new Date()
+            });
+            alert("บันทึกสำเร็จ!");
+            loadUserWatched(user.uid);
+        } catch (e) { alert("Error: " + e.message); }
     }
+    
+    // --- ADDING SCROLL EFFECT TO NAVBAR ---
+    window.onscroll = function() {
+        var nav = document.getElementById('navbar');
+        if ( window.pageYOffset > 10 ) {
+            nav.classList.add("scrolled");
+        } else {
+            nav.classList.remove("scrolled");
+        }
+    };
+    
 </script>
 </body>
 </html>
