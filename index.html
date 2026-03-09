@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Anime Tracker | รวมพลคนรักอนิเมะ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-color: #ff4757; --bg-color: #2f3542; }
+        body { font-family: 'Kanit', sans-serif; background: var(--bg-color); color: white; margin: 0; }
+        nav { background: #1e2229; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1000px; margin: auto; padding: 20px; }
+        
+        /* การ์ดอนิเมะ */
+        .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .anime-card { background: #3f4451; border-radius: 10px; overflow: hidden; transition: 0.3s; position: relative; }
+        .anime-card:hover { transform: translateY(-5px); }
+        .anime-card img { width: 100%; height: 250px; object-fit: cover; }
+        .anime-info { padding: 15px; }
+        
+        /* ปุ่มต่างๆ */
+        .btn { border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; width: 100%; font-family: 'Kanit'; }
+        .btn-add { background: var(--main-color); color: white; }
+        .btn-watched { background: #2ed573; color: white; display: none; } /* จะโชว์เมื่อกดแล้ว */
+        
+        /* หน้า Login */
+        #auth-section { text-align: center; margin-top: 100px; }
+        input { padding: 10px; border-radius: 5px; border: none; margin: 5px; width: 250px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div style="font-size: 1.5rem; font-weight: bold; color: var(--main-color);">ANIME TRACKER</div>
+    <div id="user-info">กำลังโหลด...</div>
+</nav>
+
+<div class="container">
+    <div id="auth-section">
+        <h2>เข้าสู่ระบบเพื่อบันทึกอนิเมะของคุณ</h2>
+        <input type="email" id="email" placeholder="อีเมล">
+        <input type="password" id="password" placeholder="รหัสผ่าน"> <br>
+        <button class="btn btn-add" style="width: 120px;" onclick="handleSignUp()">สมัครสมาชิก</button>
+        <button class="btn" style="width: 120px; background: #747d8c; color:white;" onclick="handleLogin()">เข้าสู่ระบบ</button>
+    </div>
+
+    <div id="main-content" style="display: none;">
+        <h3>✨ อนิเมะแนะนำจาก Admin</h3>
+        <div class="anime-grid" id="admin-list">
+            </div>
+
+        <hr style="margin: 40px 0; border: 0.5px solid #57606f;">
+
+        <h3>✅ เรื่องที่ฉันดูจบแล้ว</h3>
+        <div class="anime-grid" id="my-watched-list">
+            </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+    apiKey: "AIzaSyADNWKhUNqKyF19d-2WBHsHQ1uaZIAN8Bg",
+    authDomain: "myanimeweb-1e859.firebaseapp.com",
+    projectId: "myanimeweb-1e859",
+    storageBucket: "myanimeweb-1e859.firebasestorage.app",
+    messagingSenderId: "1018346930735",
+    appId: "1:1018346930735:web:dd2d015e2a1f0c628b3cda",
+    measurementId: "G-0JZN53NYFD"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // เช็คสถานะการเข้าสู่ระบบ
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('user-info').innerHTML = `${user.email} | <a href="#" onclick="logout()" style="color:white">ออกระบบ</a>`;
+            loadAdminAnime(); // โหลดอนิเมะที่ Admin ลงไว้
+            loadUserWatched(user.uid); // โหลดเรื่องที่ User เคยดู
+        } else {
+            document.getElementById('auth-section').style.display = 'block';
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('user-info').innerText = "กรุณาล็อกอิน";
+        }
+    });
+
+    // ฟังก์ชันเพิ่มอนิเมะเข้า "รายการที่ดูแล้ว" (สำหรับ User)
+    window.markAsWatched = async (animeName, imageUrl) => {
+        const user = auth.currentUser;
+        await addDoc(collection(db, "user_watched"), {
+            uid: user.uid,
+            animeName: animeName,
+            image: imageUrl,
+            timestamp: new Date()
+        });
+        alert("บันทึกสำเร็จ!");
+        location.reload();
+    }
+</script>
+</body>
+</html>
