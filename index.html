@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY HUB | Global Entertainment</title>
+    <title>MY HUB | Sorted Entertainment</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,7 +15,7 @@
 
         * { box-sizing: border-box; }
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Use Netflix-like font */
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: var(--netflix-black);
             color: var(--text-color);
             margin: 0; padding: 0;
@@ -36,137 +36,105 @@
         }
         nav.scrolled { background-color: var(--netflix-black); }
 
-        .nav-left { display: flex; align-items: center; gap: 45px; flex-grow: 1; }
-        .nav-logo { 
-            color: var(--netflix-red); 
-            font-size: 1.8rem; 
-            font-weight: 700; 
-            text-decoration: none;
-            letter-spacing: -1px;
-        }
+        .nav-left { display: flex; align-items: center; gap: 40px; flex-grow: 1; }
+        .nav-logo { color: var(--netflix-red); font-size: 1.8rem; font-weight: 700; text-decoration: none; }
 
         .nav-menu { display: flex; list-style: none; gap: 20px; margin: 0; padding: 0; }
         .nav-menu li a { 
             color: #E5E5E5; 
             text-decoration: none; 
             font-size: 0.85rem;
-            font-weight: 400;
+            cursor: pointer;
             transition: color 0.3s;
         }
-        .nav-menu li a:hover { color: #B3B3B3; }
+        .nav-menu li a:hover, .nav-menu li a.active { color: #FFF; font-weight: 600; }
 
-        .nav-right { display: flex; align-items: center; gap: 25px; }
-        
-        .user-container { display: flex; align-items: center; gap: 15px; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
         .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .user-avatar { 
-            width: 32px; height: 32px; 
-            border-radius: 4px; 
-            object-fit: cover; 
-        }
-        .user-name { font-size: 0.85rem; color: #FFF; }
+        .user-avatar { width: 32px; height: 32px; border-radius: 4px; object-fit: cover; }
         
-        .btn-logout {
-            background: var(--netflix-red); border: none; color: #FFF;
-            padding: 5px 15px; border-radius: 3px; font-size: 0.75rem;
-            cursor: pointer; font-weight: 500;
-        }
-
-        /* --- AUTH SECTION --- */
-        #auth-section { 
-            max-width: 450px; margin: 15vh auto; 
-            background: rgba(0,0,0,0.75); padding: 60px; 
-            border-radius: 4px; text-align: center;
-        }
-        h1 { font-size: 2rem; margin-bottom: 28px; text-align: left; }
-        input { 
-            padding: 16px; margin-bottom: 16px; border-radius: 4px; border: none;
-            background: #333; color: white; width: 100%; font-size: 1rem;
-        }
-        .btn-primary { 
-            background: var(--netflix-red); color: white; border: none;
-            padding: 16px; border-radius: 4px; font-size: 1rem; width: 100%;
-            cursor: pointer; font-weight: 600; margin-top: 24px;
-        }
-
         /* --- CONTENT --- */
-        .container { padding: 60px 4% 20px; }
-        .section-title { font-size: 1.4rem; margin-bottom: 20px; font-weight: 500; }
-        
+        .container { padding: 80px 4% 20px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-title { font-size: 1.5rem; font-weight: 500; margin: 0; }
+
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 12px;
+            gap: 15px;
+            margin-bottom: 50px;
         }
         .card { 
             background: #181818; border-radius: 4px; overflow: hidden; 
-            position: relative; transition: transform 0.4s ease;
+            position: relative; transition: transform 0.3s ease;
         }
         .card:hover { transform: scale(1.05); z-index: 2; }
         .card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
-        .card-overlay { padding: 10px; background: #181818; }
-
-        /* --- MODAL --- */
-        .modal {
-            display: none; position: fixed; z-index: 2000; left: 0; top: 0; 
-            width: 100%; height: 100%; background: rgba(0,0,0,0.8);
-            align-items: center; justify-content: center;
+        .card-info { padding: 12px; background: #181818; }
+        .category-tag { 
+            font-size: 0.6rem; background: #333; color: #aaa; 
+            padding: 2px 6px; border-radius: 2px; text-transform: uppercase; 
+            margin-bottom: 5px; display: inline-block;
         }
-        .modal-content { background: #181818; padding: 40px; border-radius: 8px; width: 400px; text-align: center; }
 
-        @media (max-width: 1000px) { .nav-menu { display: none; } }
+        /* --- BUTTONS --- */
+        .btn-red { background: var(--netflix-red); color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; width: 100%; font-family: 'Kanit'; }
+        .btn-done { background: #2ed573; color: white; border: none; padding: 8px; border-radius: 4px; width: 100%; cursor: default; }
+
+        #auth-section { max-width: 400px; margin: 20vh auto; text-align: center; background: rgba(0,0,0,0.7); padding: 40px; border-radius: 8px; }
+        input { padding: 15px; margin-bottom: 15px; width: 100%; background: #333; border: none; color: white; border-radius: 4px; }
+
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
+        .modal-content { background: #181818; padding: 30px; border-radius: 8px; width: 350px; text-align: center; }
     </style>
 </head>
 <body>
 
 <nav id="navbar">
     <div class="nav-left">
-        <a href="#" class="nav-logo">MY HUB</a>
+        <a href="#" class="nav-logo" onclick="filterCategory('All')">MY HUB</a>
         <ul class="nav-menu">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">TV Shows</a></li>
-            <li><a href="#">Movies</a></li>
-            <li><a href="#">Anime</a></li>
-            <li><a href="#">Manga</a></li>
+            <li><a onclick="filterCategory('All')">Home</a></li>
+            <li><a onclick="filterCategory('Series')">TV Shows</a></li>
+            <li><a onclick="filterCategory('Movie')">Movies</a></li>
+            <li><a onclick="filterCategory('Anime')">Anime</a></li>
+            <li><a onclick="filterCategory('Manga')">Manga</a></li>
             <li><a href="#my-list">My List</a></li>
         </ul>
     </div>
     <div class="nav-right" id="user-nav"></div>
 </nav>
 
-<div id="profile-modal" class="modal">
-    <div class="modal-content">
-        <h2 style="margin-top:0">Edit Profile</h2>
-        <img id="avatar-preview" src="" class="user-avatar" style="width:100px; height:100px; margin-bottom:20px;">
-        <label style="display:block; background:#333; padding:10px; cursor:pointer; margin-bottom:20px; font-size:0.8rem; border-radius:4px;">
-            📁 Upload Profile Image
-            <input type="file" id="file-input" accept="image/*" style="display:none;">
-        </label>
-        <input type="text" id="nickname-input" placeholder="Display Name">
-        <button class="btn-primary" id="save-btn" onclick="saveProfile()" style="margin-top:0">Save Changes</button>
-        <button onclick="closeModal()" style="background:none; border:none; color:#aaa; margin-top:15px; cursor:pointer;">Cancel</button>
-    </div>
-</div>
-
 <div class="container">
     <div id="auth-section">
         <h1>Sign In</h1>
-        <input type="email" id="email" placeholder="Email or phone number">
+        <input type="email" id="email" placeholder="Email">
         <input type="password" id="password" placeholder="Password">
-        <button class="btn-primary" onclick="handleLogin()">Sign In</button>
-        <p style="color:#737373; margin-top:30px; text-align:left;">New to My Hub? <a href="#" onclick="handleSignUp()" style="color:#FFF; text-decoration:none;">Sign up now.</a></p>
+        <button class="btn-red" onclick="handleLogin()">Sign In</button>
+        <p style="font-size: 0.8rem; margin-top: 15px;">New? <a href="#" onclick="handleSignUp()" style="color:white">Create Account</a></p>
     </div>
 
     <div id="main-content" style="display: none;">
-        <section id="home">
-            <h3 class="section-title" id="welcome-txt">Recommended for You</h3>
-            <div class="content-grid" id="admin-list"></div>
-        </section>
+        <div class="section-header">
+            <h3 class="section-title" id="display-category">Recommended for You</h3>
+        </div>
+        <div class="content-grid" id="admin-list"></div>
 
-        <section id="my-list" style="margin-top: 50px;">
-            <h3 class="section-title">My Completed List</h3>
+        <div id="my-list">
+            <h3 class="section-title" style="margin-bottom: 20px;">My Completed List</h3>
             <div class="content-grid" id="my-watched-list"></div>
-        </section>
+        </div>
+    </div>
+</div>
+
+<div id="profile-modal" class="modal">
+    <div class="modal-content">
+        <h3>Edit Profile</h3>
+        <img id="avatar-preview" src="" style="width:80px; height:80px; border-radius:4px; margin-bottom:15px; object-fit:cover;">
+        <input type="file" id="file-input" style="margin-bottom:15px; font-size: 10px;">
+        <input type="text" id="nickname-input" placeholder="Nickname">
+        <button class="btn-red" onclick="saveProfile()">Save</button>
+        <button onclick="closeModal()" style="background:none; border:none; color:grey; margin-top:10px; cursor:pointer;">Cancel</button>
     </div>
 </div>
 
@@ -190,134 +158,121 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    let userProfile = { nickname: "", avatar: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" };
+    let allData = []; // เก็บข้อมูลทั้งหมดจาก Admin
+    let userWatched = [];
+    let currentCategory = 'All';
 
-    // --- Global Functions ---
-    window.handleLogin = async () => {
-        const e = document.getElementById('email').value;
-        const p = document.getElementById('password').value;
-        try { await signInWithEmailAndPassword(auth, e, p); } catch (err) { alert("Invalid credentials."); }
+    // --- Filtering Logic ---
+    window.filterCategory = (cat) => {
+        currentCategory = cat;
+        document.getElementById('display-category').innerText = cat === 'All' ? 'Recommended for You' : cat;
+        renderAdminList();
     };
 
-    window.handleSignUp = async () => {
-        const e = document.getElementById('email').value;
-        const p = document.getElementById('password').value;
-        try { await createUserWithEmailAndPassword(auth, e, p); alert("Account created successfully!"); } catch (err) { alert(err.message); }
-    };
+    async function fetchAdminData() {
+        const snap = await getDocs(collection(db, "all_anime"));
+        allData = [];
+        snap.forEach(doc => allData.push(doc.data()));
+        renderAdminList();
+    }
 
-    window.logout = () => {
-        signOut(auth).then(() => {
-            document.getElementById('user-nav').innerHTML = "";
-            location.reload(); 
-        });
-    };
-
-    window.openModal = () => {
-        document.getElementById('nickname-input').value = userProfile.nickname;
-        document.getElementById('avatar-preview').src = userProfile.avatar;
-        document.getElementById('profile-modal').style.display = 'flex';
-    };
-
-    window.closeModal = () => document.getElementById('profile-modal').style.display = 'none';
-
-    window.saveProfile = async () => {
-        const user = auth.currentUser;
-        const file = document.getElementById('file-input').files[0];
-        const nick = document.getElementById('nickname-input').value;
-        let url = userProfile.avatar;
-
-        try {
-            if (file) {
-                const sRef = ref(storage, `users/${user.uid}`);
-                await uploadBytes(sRef, file);
-                url = await getDownloadURL(sRef);
-            }
-            await setDoc(doc(db, "users", user.uid), { nickname: nick, avatar: url });
-            location.reload();
-        } catch (e) { alert("Error saving profile: " + e.message); }
-    };
-
-    async function loadContent(uid) {
-        const uDoc = await getDoc(doc(db, "users", uid));
-        if (uDoc.exists()) userProfile = uDoc.data();
-
-        // Update Navbar UI
-        document.getElementById('user-nav').innerHTML = `
-            <div class="user-container">
-                <div class="user-profile" onclick="openModal()">
-                    <img src="${userProfile.avatar}" class="user-avatar">
-                    <span class="user-name">${userProfile.nickname || "User"}</span>
-                </div>
-                <button class="btn-logout" onclick="logout()">Sign Out</button>
-            </div>
-        `;
-
-        document.getElementById('welcome-txt').innerText = `Welcome back, ${userProfile.nickname || 'User'}`;
-
-        // Fetch Data
-        const qW = query(collection(db, "user_watched"), where("uid", "==", uid));
-        const snapW = await getDocs(qW);
-        const listW = document.getElementById('my-watched-list');
-        listW.innerHTML = "";
-        let watched = [];
+    function renderAdminList() {
+        const list = document.getElementById('admin-list');
+        list.innerHTML = "";
         
-        snapW.forEach(doc => {
-            const d = doc.data();
-            if(!watched.includes(d.animeName)) {
-                watched.push(d.animeName);
-                listW.innerHTML += `
-                <div class="card">
-                    <img src="${d.image}">
-                    <div class="card-overlay"><span style="font-size:0.8rem">✅ ${d.animeName}</span></div>
-                </div>`;
-            }
-        });
+        // กรองข้อมูลตามหมวดหมู่
+        const filtered = currentCategory === 'All' 
+            ? allData 
+            : allData.filter(item => item.category === currentCategory);
 
-        const snapA = await getDocs(collection(db, "all_anime"));
-        const listA = document.getElementById('admin-list');
-        listA.innerHTML = "";
-        snapA.forEach(doc => {
-            const d = doc.data();
-            const isW = watched.includes(d.title);
-            listA.innerHTML += `
+        filtered.forEach(d => {
+            const isWatched = userWatched.includes(d.title);
+            list.innerHTML += `
                 <div class="card">
                     <img src="${d.image}">
-                    <div class="card-overlay">
-                        <div style="font-size:0.85rem; margin-bottom:8px;">${d.title}</div>
-                        ${isW ? `<div style="color:#2ed573; font-size:0.75rem;">Completed</div>` : 
-                        `<button class="btn-logout" style="width:100%;" onclick="markWatched('${d.title}','${d.image}')">Mark as Done</button>`}
+                    <div class="card-info">
+                        <span class="category-tag">${d.category || 'Movie'}</span>
+                        <div style="font-size:0.9rem; margin-bottom:10px; font-weight:500;">${d.title}</div>
+                        ${isWatched ? `<button class="btn-done">Completed</button>` : 
+                        `<button class="btn-red" onclick="markWatched('${d.title}','${d.image}')">Mark as Done</button>`}
                     </div>
                 </div>`;
         });
     }
 
-    window.markWatched = async (t, i) => {
-        await addDoc(collection(db, "user_watched"), { uid: auth.currentUser.uid, animeName: t, image: i, timestamp: new Date() });
-        loadContent(auth.currentUser.uid);
+    // --- Auth & Profile Functions ---
+    window.handleLogin = async () => {
+        try { await signInWithEmailAndPassword(auth, email.value, password.value); } catch(e) { alert("Login failed"); }
     };
 
-    // --- Listeners ---
-    onAuthStateChanged(auth, user => {
-        if (user) {
+    window.handleSignUp = async () => {
+        try { await createUserWithEmailAndPassword(auth, email.value, password.value); alert("Signed up!"); } catch(e) { alert(e.message); }
+    };
+
+    window.logout = () => { signOut(auth).then(() => location.reload()); };
+
+    window.openModal = () => { document.getElementById('profile-modal').style.display='flex'; };
+    window.closeModal = () => { document.getElementById('profile-modal').style.display='none'; };
+
+    window.saveProfile = async () => {
+        const user = auth.currentUser;
+        const file = document.getElementById('file-input').files[0];
+        let url = "";
+        if(file) {
+            const sRef = ref(storage, `users/${user.uid}`);
+            await uploadBytes(sRef, file);
+            url = await getDownloadURL(sRef);
+        }
+        await setDoc(doc(db, "users", user.uid), { nickname: nickname-input.value, avatar: url }, {merge: true});
+        location.reload();
+    };
+
+    window.markWatched = async (t, i) => {
+        await addDoc(collection(db, "user_watched"), { uid: auth.currentUser.uid, animeName: t, image: i });
+        loadUserList(auth.currentUser.uid);
+    };
+
+    async function loadUserList(uid) {
+        const q = query(collection(db, "user_watched"), where("uid", "==", uid));
+        const snap = await getDocs(q);
+        userWatched = [];
+        const myList = document.getElementById('my-watched-list');
+        myList.innerHTML = "";
+
+        snap.forEach(doc => {
+            const d = doc.data();
+            if(!userWatched.includes(d.animeName)) {
+                userWatched.push(d.animeName);
+                myList.innerHTML += `<div class="card"><img src="${d.image}"><div class="card-info">${d.animeName} ✅</div></div>`;
+            }
+        });
+        renderAdminList();
+    }
+
+    onAuthStateChanged(auth, async user => {
+        if(user) {
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
-            loadContent(user.uid);
+            
+            const uDoc = await getDoc(doc(db, "users", user.uid));
+            const uData = uDoc.exists() ? uDoc.data() : { avatar: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png", nickname: "User" };
+            
+            document.getElementById('user-nav').innerHTML = `
+                <div class="user-profile" onclick="openModal()">
+                    <span style="font-size:0.8rem">${uData.nickname || user.email}</span>
+                    <img src="${uData.avatar}" class="user-avatar">
+                </div>
+                <button onclick="logout()" style="background:none; border:none; color:red; cursor:pointer; font-size:10px">Sign Out</button>
+            `;
+            
+            fetchAdminData();
+            loadUserList(user.uid);
         } else {
             document.getElementById('auth-section').style.display = 'block';
             document.getElementById('main-content').style.display = 'none';
-            document.getElementById('user-nav').innerHTML = "";
         }
     });
 
-    window.onscroll = () => {
-        const nav = document.getElementById('navbar');
-        window.pageYOffset > 50 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled');
-    };
-
-    document.getElementById('file-input').onchange = e => {
-        const [file] = e.target.files;
-        if (file) document.getElementById('avatar-preview').src = URL.createObjectURL(file);
-    };
 </script>
 </body>
 </html>
