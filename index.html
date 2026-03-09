@@ -20,7 +20,6 @@
         /* ปุ่มต่างๆ */
         .btn { border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; width: 100%; font-family: 'Kanit'; }
         .btn-add { background: var(--main-color); color: white; }
-        .btn-watched { background: #2ed573; color: white; display: none; } /* จะโชว์เมื่อกดแล้ว */
         
         /* หน้า Login */
         #auth-section { text-align: center; margin-top: 100px; }
@@ -45,14 +44,12 @@
 
     <div id="main-content" style="display: none;">
         <h3>✨ อนิเมะแนะนำจาก Admin</h3>
-        <div class="anime-grid" id="admin-list">
-            </div>
+        <div class="anime-grid" id="admin-list"></div>
 
         <hr style="margin: 40px 0; border: 0.5px solid #57606f;">
 
         <h3>✅ เรื่องที่ฉันดูจบแล้ว</h3>
-        <div class="anime-grid" id="my-watched-list">
-            </div>
+        <div class="anime-grid" id="my-watched-list"></div>
     </div>
 </div>
 
@@ -62,27 +59,83 @@
     import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
-    apiKey: "AIzaSyADNWKhUNqKyF19d-2WBHsHQ1uaZIAN8Bg",
-    authDomain: "myanimeweb-1e859.firebaseapp.com",
-    projectId: "myanimeweb-1e859",
-    storageBucket: "myanimeweb-1e859.firebasestorage.app",
-    messagingSenderId: "1018346930735",
-    appId: "1:1018346930735:web:dd2d015e2a1f0c628b3cda",
-    measurementId: "G-0JZN53NYFD"
+        apiKey: "AIzaSyADNWKhUNqKyF19d-2WBHsHQ1uaZIAN8Bg",
+        authDomain: "myanimeweb-1e859.firebaseapp.com",
+        projectId: "myanimeweb-1e859",
+        storageBucket: "myanimeweb-1e859.firebasestorage.app",
+        messagingSenderId: "1018346930735",
+        appId: "1:1018346930735:web:dd2d015e2a1f0c628b3cda",
+        measurementId: "G-0JZN53NYFD"
     };
     
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // --- ฟังก์ชันสำหรับปุ่มกด (ต้องใช้ window. เพื่อให้ HTML เรียกใช้ได้) ---
+    
+    window.handleSignUp = async () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        try {
+            await createUserWithEmailAndPassword(auth, email, password);
+            alert("สมัครสมาชิกสำเร็จ!");
+        } catch (e) { alert("Error: " + e.message); }
+    };
+
+    window.handleLogin = async () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            alert("เข้าสู่ระบบสำเร็จ!");
+        } catch (e) { alert("Error: " + e.message); }
+    };
+
+    window.logout = () => signOut(auth);
+
+    // --- ฟังก์ชันดึงข้อมูลมาแสดงผล ---
+
+    async function loadAdminAnime() {
+        const querySnapshot = await getDocs(collection(db, "all_anime"));
+        const listDiv = document.getElementById('admin-list');
+        listDiv.innerHTML = "";
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            listDiv.innerHTML += `
+                <div class="anime-card">
+                    <img src="${data.image}">
+                    <div class="anime-info">
+                        <h4>${data.title}</h4>
+                        <button class="btn btn-add" onclick="markAsWatched('${data.title}', '${data.image}')">ดูจบแล้ว</button>
+                    </div>
+                </div>`;
+        });
+    }
+
+    async function loadUserWatched(uid) {
+        const q = query(collection(db, "user_watched"), where("uid", "==", uid));
+        const querySnapshot = await getDocs(q);
+        const listDiv = document.getElementById('my-watched-list');
+        listDiv.innerHTML = "";
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            listDiv.innerHTML += `
+                <div class="anime-card">
+                    <img src="${data.image}">
+                    <div class="anime-info"><h4>${data.animeName} ✅</h4></div>
+                </div>`;
+        });
+    }
+
     // เช็คสถานะการเข้าสู่ระบบ
     onAuthStateChanged(auth, (user) => {
         if (user) {
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
-            document.getElementById('user-info').innerHTML = `${user.email} | <a href="#" onclick="logout()" style="color:white">ออกระบบ</a>`;
-            loadAdminAnime(); // โหลดอนิเมะที่ Admin ลงไว้
-            loadUserWatched(user.uid); // โหลดเรื่องที่ User เคยดู
+            document.getElementById('user-info').innerHTML = `${user.email} | <button onclick="logout()" style="background:none; border:none; color:white; cursor:pointer; text-decoration:underline;">ออกระบบ</button>`;
+            loadAdminAnime();
+            loadUserWatched(user.uid);
         } else {
             document.getElementById('auth-section').style.display = 'block';
             document.getElementById('main-content').style.display = 'none';
@@ -90,9 +143,9 @@
         }
     });
 
-    // ฟังก์ชันเพิ่มอนิเมะเข้า "รายการที่ดูแล้ว" (สำหรับ User)
     window.markAsWatched = async (animeName, imageUrl) => {
         const user = auth.currentUser;
+        if(!user) return;
         await addDoc(collection(db, "user_watched"), {
             uid: user.uid,
             animeName: animeName,
@@ -100,7 +153,7 @@
             timestamp: new Date()
         });
         alert("บันทึกสำเร็จ!");
-        location.reload();
+        loadUserWatched(user.uid);
     }
 </script>
 </body>
