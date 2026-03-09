@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY HUB | ศูนย์รวมความบันเทิงของคุณ</title>
+    <title>MY HUB | Entertainment Center</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --netflix-red: #E50914;
             --netflix-black: #141414;
             --text-color: #FFFFFF;
-            --text-muted: #E5E5E5;
             --nav-height: 68px;
         }
 
@@ -20,12 +19,11 @@
             color: var(--text-color);
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
         }
 
         /* --- NETFLIX NAVBAR --- */
         nav {
-            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 10%, transparent 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
             padding: 0 4%;
             display: flex;
             align-items: center;
@@ -35,93 +33,56 @@
             width: 100%;
             z-index: 1000;
             box-sizing: border-box;
-            transition: background-color 0.4s;
+            transition: 0.4s;
         }
         nav.scrolled { background-color: var(--netflix-black); }
 
         .nav-left { display: flex; align-items: center; gap: 25px; flex-grow: 1; }
-        .nav-logo { color: var(--netflix-red); font-size: 1.8rem; font-weight: bold; text-decoration: none; letter-spacing: -1px; }
-
+        .nav-logo { color: var(--netflix-red); font-size: 1.8rem; font-weight: bold; text-decoration: none; }
         .nav-menu { display: flex; list-style: none; gap: 20px; margin: 0; padding: 0; }
-        .nav-menu li a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: 0.3s; }
-        .nav-menu li a.active { font-weight: 500; color: #FFF; }
+        .nav-menu li a { color: #E5E5E5; text-decoration: none; font-size: 0.85rem; }
 
-        .nav-right { display: flex; align-items: center; gap: 20px; }
-        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.85rem; }
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .user-avatar { width: 32px; height: 32px; border-radius: 4px; object-fit: cover; border: 1px solid #333; }
 
-        /* --- MODAL STYLE (EDIT PROFILE) --- */
+        /* --- MODAL EDIT PROFILE --- */
         .modal {
             display: none;
             position: fixed;
             z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            align-items: center;
-            justify-content: center;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            align-items: center; justify-content: center;
         }
         .modal-content {
-            background-color: #181818;
-            padding: 40px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 450px;
-            text-align: center;
+            background: #181818; padding: 40px; border-radius: 8px;
+            width: 90%; max-width: 400px; text-align: center;
         }
-        .profile-upload-area { margin-bottom: 20px; position: relative; }
-        .preview-img-large { width: 100px; height: 100px; border-radius: 4px; object-fit: cover; margin-bottom: 10px; }
+        .preview-img-large { width: 100px; height: 100px; border-radius: 4px; object-fit: cover; margin-bottom: 15px; border: 2px solid var(--netflix-red); }
+        
+        /* สไตล์ปุ่มอัปโหลด */
+        .file-label { display: block; background: #333; padding: 10px; border-radius: 4px; cursor: pointer; margin-bottom: 15px; border: 1px dashed #555; }
+        #file-input { display: none; }
 
-        /* --- CONTENT SECTION --- */
+        /* --- CONTENT --- */
         .container { padding: 40px 4%; margin-top: var(--nav-height); }
-        h3 { font-weight: 500; font-size: 1.4rem; margin-bottom: 20px; }
-
-        .anime-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 15px;
-        }
-
-        .anime-card {
-            background-color: #181818;
-            border-radius: 4px;
-            overflow: hidden;
-            transition: transform 0.3s;
-            position: relative;
-        }
+        .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+        .anime-card { background: #181818; border-radius: 4px; overflow: hidden; position: relative; transition: 0.3s; }
         .anime-card:hover { transform: scale(1.05); z-index: 10; }
         .anime-card img { width: 100%; height: 260px; object-fit: cover; }
+        .anime-info { padding: 10px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); position: absolute; bottom: 0; width: 100%; box-sizing: border-box; }
 
-        .anime-info {
-            padding: 10px;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .anime-info h4 { margin: 0; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* --- BUTTONS & INPUTS --- */
-        .btn {
-            border: none; padding: 10px; border-radius: 2px; cursor: pointer;
-            font-family: 'Kanit'; width: 100%; margin-top: 10px; font-size: 0.9rem; transition: 0.2s;
-        }
-        .btn-add { background-color: var(--netflix-red); color: white; }
-        .btn-add:hover { background-color: #ff1f29; }
-        .btn-watched { background-color: #2ed573; color: white; cursor: default; }
-        
-        input {
+        /* --- INPUT & BUTTON --- */
+        input[type="text"], input[type="email"], input[type="password"] {
             padding: 12px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #333;
-            background-color: #333; color: white; width: 100%; box-sizing: border-box; font-family: 'Kanit';
+            background: #333; color: white; width: 100%; box-sizing: border-box; font-family: 'Kanit';
         }
+        .btn { border: none; padding: 12px; border-radius: 2px; cursor: pointer; width: 100%; font-family: 'Kanit'; font-weight: 500; }
+        .btn-red { background: var(--netflix-red); color: white; }
+        .btn-watched { background: #2ed573; color: white; cursor: default; }
 
-        #auth-section {
-            text-align: center; margin: 10vh auto; background-color: rgba(0,0,0,0.75);
-            padding: 60px; max-width: 400px; border-radius: 4px;
-        }
+        #auth-section { text-align: center; margin: 10vh auto; background: rgba(0,0,0,0.75); padding: 60px; max-width: 400px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -130,40 +91,40 @@
     <div class="nav-left">
         <a href="#" class="nav-logo">MY HUB</a>
         <ul class="nav-menu">
-            <li><a href="#" class="active">หน้าหลัก</a></li>
+            <li><a href="#">หน้าหลัก</a></li>
             <li><a href="#">รายการ</a></li>
             <li><a href="#">ภาพยนตร์</a></li>
             <li><a href="#">เกม</a></li>
-            <li><a href="#">รายการของฉัน</a></li>
         </ul>
     </div>
-    <div class="nav-right" id="user-info"></div>
+    <div class="nav-right" id="user-display"></div>
 </nav>
 
 <div id="profile-modal" class="modal">
     <div class="modal-content">
         <h2 style="margin-top:0;">แก้ไขโปรไฟล์</h2>
-        <div class="profile-upload-area">
-            <img id="edit-avatar-preview" src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" class="preview-img-large">
-            <input type="text" id="edit-avatar-url" placeholder="วางลิงก์รูปโปรไฟล์ (URL)">
-        </div>
-        <input type="text" id="edit-nickname" placeholder="ชื่อเล่นของคุณ">
-        <button class="btn btn-add" onclick="saveProfile()">บันทึกข้อมูล</button>
-        <button class="btn" style="background:#333; color:white;" onclick="closeProfileModal()">ยกเลิก</button>
+        <img id="avatar-preview" src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" class="preview-img-large">
+        
+        <label for="file-input" class="file-label">📁 เลือกรูปจากเครื่องของคุณ</label>
+        <input type="file" id="file-input" accept="image/*">
+        
+        <input type="text" id="nickname-input" placeholder="ชื่อเล่นของคุณ">
+        <button class="btn btn-red" id="save-btn" onclick="saveProfile()">บันทึกโปรไฟล์</button>
+        <button class="btn" style="background:none; color:white; margin-top:10px;" onclick="closeModal()">ยกเลิก</button>
     </div>
 </div>
 
 <div class="container">
     <div id="auth-section">
         <h2 style="font-size: 2rem; margin-bottom: 30px;">เข้าสู่ระบบ</h2>
-        <input type="email" id="email" placeholder="อีเมล">
-        <input type="password" id="password" placeholder="รหัสผ่าน">
-        <button class="btn btn-add" style="padding: 15px;" onclick="handleLogin()">เข้าสู่ระบบ</button>
-        <button class="btn" style="background:#333; color:white; padding: 15px; margin-top: 10px;" onclick="handleSignUp()">สมัครสมาชิกใหม่</button>
+        <input type="email" id="login-email" placeholder="อีเมล">
+        <input type="password" id="login-pass" placeholder="รหัสผ่าน">
+        <button class="btn btn-red" onclick="handleLogin()">เข้าสู่ระบบ</button>
+        <button class="btn" style="background:#333; color:white; margin-top:10px;" onclick="handleSignUp()">สมัครสมาชิกใหม่</button>
     </div>
 
     <div id="main-content" style="display: none;">
-        <h3 id="welcome-text">✨ แนะนำสำหรับคุณ</h3>
+        <h3 id="welcome-msg">✨ แนะนำสำหรับคุณ</h3>
         <div class="anime-grid" id="admin-list"></div>
         <hr style="margin: 60px 0; border: 0; border-top: 1px solid #333;">
         <h3>✅ รายการที่คุณดูจบแล้ว</h3>
@@ -174,146 +135,138 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs, query, where, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyADNWKhUNqKyF19d-2WBHsHQ1uaZIAN8Bg",
         authDomain: "myanimeweb-1e859.firebaseapp.com",
         projectId: "myanimeweb-1e859",
-        storageBucket: "myanimeweb-1e859.firebasestorage.app",
+        storageBucket: "myanimeweb-1e859.firebasestorage.app", // ตรวจสอบชื่อตรงนี้ใน Console
         messagingSenderId: "1018346930735",
-        appId: "1:1018346930735:web:dd2d015e2a1f0c628b3cda",
-        measurementId: "G-0JZN53NYFD"
+        appId: "1:1018346930735:web:dd2d015e2a1f0c628b3cda"
     };
-    
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const storage = getStorage(app);
 
     let watchedTitles = [];
-    let currentUserProfile = { nickname: "", avatar: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" };
+    let userProfile = { nickname: "", avatar: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" };
 
-    // --- PROFILE MODAL FUNCTIONS ---
-    window.openProfileModal = () => {
-        document.getElementById('edit-nickname').value = currentUserProfile.nickname;
-        document.getElementById('edit-avatar-url').value = currentUserProfile.avatar;
-        document.getElementById('edit-avatar-preview').src = currentUserProfile.avatar;
+    // --- PROFILE LOGIC ---
+    document.getElementById('file-input').onchange = e => {
+        const [file] = e.target.files;
+        if (file) document.getElementById('avatar-preview').src = URL.createObjectURL(file);
+    };
+
+    window.openModal = () => {
+        document.getElementById('nickname-input').value = userProfile.nickname;
+        document.getElementById('avatar-preview').src = userProfile.avatar;
         document.getElementById('profile-modal').style.display = 'flex';
     };
 
-    window.closeProfileModal = () => {
-        document.getElementById('profile-modal').style.display = 'none';
-    };
+    window.closeModal = () => document.getElementById('profile-modal').style.display = 'none';
 
     window.saveProfile = async () => {
         const user = auth.currentUser;
-        if (!user) return;
-        
-        const newNickname = document.getElementById('edit-nickname').value;
-        const newAvatar = document.getElementById('edit-avatar-url').value || currentUserProfile.avatar;
+        const file = document.getElementById('file-input').files[0];
+        const nick = document.getElementById('nickname-input').value;
+        const btn = document.getElementById('save-btn');
+
+        btn.innerText = "กำลังอัปโหลด..."; btn.disabled = true;
+        let url = userProfile.avatar;
 
         try {
-            // บันทึกข้อมูลลง Firestore
-            await setDoc(doc(db, "users", user.uid), {
-                nickname: newNickname,
-                avatar: newAvatar
-            });
-            alert("อัปเดตโปรไฟล์สำเร็จ!");
-            location.reload(); // รีโหลดเพื่ออัปเดตการแสดงผล
-        } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
+            if (file) {
+                const sRef = ref(storage, `profiles/${user.uid}`);
+                await uploadBytes(sRef, file);
+                url = await getDownloadURL(sRef);
+            }
+            await setDoc(doc(db, "users", user.uid), { nickname: nick, avatar: url });
+            location.reload();
+        } catch (e) { alert(e.message); btn.innerText = "บันทึกโปรไฟล์"; btn.disabled = false; }
     };
 
-    // --- AUTH ---
+    // --- AUTH & DATA ---
     window.handleSignUp = async () => {
-        const e = document.getElementById('email').value;
-        const p = document.getElementById('password').value;
-        try { await createUserWithEmailAndPassword(auth, e, p); } 
-        catch (err) { alert(err.message); }
+        const e = document.getElementById('login-email').value;
+        const p = document.getElementById('login-pass').value;
+        try { await createUserWithEmailAndPassword(auth, e, p); alert("สมัครสมาชิกสำเร็จ!"); } catch (err) { alert(err.message); }
     };
 
     window.handleLogin = async () => {
-        const e = document.getElementById('email').value;
-        const p = document.getElementById('password').value;
-        try { await signInWithEmailAndPassword(auth, e, p); } 
-        catch (err) { alert("อีเมลหรือรหัสผ่านผิด"); }
+        const e = document.getElementById('login-email').value;
+        const p = document.getElementById('login-pass').value;
+        try { await signInWithEmailAndPassword(auth, e, p); } catch (err) { alert("อีเมลหรือรหัสผ่านผิด"); }
     };
 
     window.logout = () => signOut(auth);
 
-    // --- DATA LOAD ---
-    async function loadAdminAnime() {
-        const snap = await getDocs(collection(db, "all_anime"));
-        const list = document.getElementById('admin-list');
-        list.innerHTML = "";
-        snap.forEach(doc => {
+    async function loadData(uid) {
+        // โหลดโปรไฟล์
+        const uDoc = await getDoc(doc(db, "users", uid));
+        if (uDoc.exists()) {
+            userProfile = uDoc.data();
+            document.getElementById('welcome-msg').innerText = `✨ ยินดีต้อนรับคุณ ${userProfile.nickname || 'นักดูตัวยง'}`;
+        }
+
+        document.getElementById('user-display').innerHTML = `
+            <div class="user-profile" onclick="openModal()">
+                <span>${userProfile.nickname || auth.currentUser.email}</span>
+                <img src="${userProfile.avatar}" class="user-avatar">
+            </div>
+            <button onclick="logout()" style="background:none; border:none; color:#777; cursor:pointer; font-size:10px;">(ออกระบบ)</button>
+        `;
+
+        // โหลดรายการที่ดูแล้ว
+        const q = query(collection(db, "user_watched"), where("uid", "==", uid));
+        const snapW = await getDocs(q);
+        const listW = document.getElementById('my-watched-list');
+        listW.innerHTML = "";
+        watchedTitles = [];
+        snapW.forEach(doc => {
             const d = doc.data();
-            const watched = watchedTitles.includes(d.title);
-            list.innerHTML += `
+            if(!watchedTitles.includes(d.animeName)) {
+                watchedTitles.push(d.animeName);
+                listW.innerHTML += `<div class="anime-card"><img src="${d.image}"><div class="anime-info"><h4>${d.animeName} ✅</h4></div></div>`;
+            }
+        });
+
+        // โหลดรายการจาก Admin
+        const snapA = await getDocs(collection(db, "all_anime"));
+        const listA = document.getElementById('admin-list');
+        listA.innerHTML = "";
+        snapA.forEach(doc => {
+            const d = doc.data();
+            const isW = watchedTitles.includes(d.title);
+            listA.innerHTML += `
                 <div class="anime-card">
                     <img src="${d.image}">
                     <div class="anime-info">
                         <h4>${d.title}</h4>
-                        ${watched ? `<button class="btn btn-watched" disabled>ดูจบแล้ว ✅</button>` : `<button class="btn btn-add" onclick="markAsWatched('${d.title}','${d.image}')">ดูจบแล้ว</button>`}
+                        ${isW ? `<button class="btn btn-watched" disabled>ดูจบแล้ว ✅</button>` : `<button class="btn btn-red" style="padding:5px; font-size:12px;" onclick="markWatched('${d.title}','${d.image}')">ดูจบแล้ว</button>`}
                     </div>
                 </div>`;
         });
-    }
-
-    async function loadUserWatched(uid) {
-        const q = query(collection(db, "user_watched"), where("uid", "==", uid));
-        const snap = await getDocs(q);
-        const list = document.getElementById('my-watched-list');
-        list.innerHTML = "";
-        watchedTitles = [];
-        snap.forEach(doc => {
-            const d = doc.data();
-            if(!watchedTitles.includes(d.animeName)) {
-                watchedTitles.push(d.animeName);
-                list.innerHTML += `<div class="anime-card"><img src="${d.image}"><div class="anime-info"><h4>${d.animeName} ✅</h4></div></div>`;
-            }
-        });
-        loadAdminAnime();
-    }
-
-    // โหลดข้อมูลโปรไฟล์
-    async function fetchUserProfile(uid) {
-        const userDoc = await getDoc(doc(db, "users", uid));
-        if (userDoc.exists()) {
-            currentUserProfile = userDoc.data();
-            document.getElementById('welcome-text').innerText = `✨ ยินดีต้อนรับคุณ ${currentUserProfile.nickname || 'สมาชิกใหม่'}`;
-            updateNavProfile();
-        } else {
-            document.getElementById('welcome-text').innerText = "✨ แนะนำสำหรับคุณ (ตั้งชื่อเล่นได้ที่โปรไฟล์)";
-            updateNavProfile();
-        }
-    }
-
-    function updateNavProfile() {
-        document.getElementById('user-info').innerHTML = `
-            <div class="user-profile" onclick="openProfileModal()">
-                <span>${currentUserProfile.nickname || auth.currentUser.email}</span>
-                <img src="${currentUserProfile.avatar}" class="user-avatar">
-                <button onclick="event.stopPropagation(); logout()" style="background:none; border:none; color:white; cursor:pointer; opacity:0.6; font-size:10px;">(ออกระบบ)</button>
-            </div>`;
     }
 
     onAuthStateChanged(auth, user => {
         if (user) {
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
-            fetchUserProfile(user.uid);
-            loadUserWatched(user.uid);
+            loadData(user.uid);
         } else {
             document.getElementById('auth-section').style.display = 'block';
             document.getElementById('main-content').style.display = 'none';
-            document.getElementById('user-info').innerText = "";
+            document.getElementById('user-display').innerHTML = "";
         }
     });
 
-    window.markAsWatched = async (t, i) => {
-        if (!auth.currentUser || watchedTitles.includes(t)) return;
+    window.markWatched = async (t, i) => {
         await addDoc(collection(db, "user_watched"), { uid: auth.currentUser.uid, animeName: t, image: i, timestamp: new Date() });
-        loadUserWatched(auth.currentUser.uid);
+        loadData(auth.currentUser.uid);
     };
 
     window.onscroll = () => {
