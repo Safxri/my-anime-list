@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY HUB | Large Card Edition</title>
+    <title>MY HUB | Complete Large Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -18,9 +18,10 @@
             background-color: var(--netflix-black);
             color: white;
             margin: 0; padding: 0;
+            overflow-x: hidden;
         }
 
-        /* --- NAVBAR: รูปแบบเดิม --- */
+        /* --- NAVBAR --- */
         nav {
             background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
             padding: 0 4%;
@@ -29,8 +30,10 @@
             justify-content: space-between;
             height: var(--nav-height);
             position: fixed; top: 0; width: 100%;
-            z-index: 1000;
+            z-index: 1000; transition: 0.3s;
         }
+        nav.scrolled { background-color: var(--netflix-black); }
+
         .nav-left { display: flex; align-items: center; gap: 30px; }
         .nav-logo { color: var(--netflix-red); font-size: 1.8rem; font-weight: 700; text-decoration: none; }
         .nav-menu { display: flex; list-style: none; gap: 20px; padding: 0; margin: 0; cursor: pointer; }
@@ -46,16 +49,14 @@
         .user-box { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .user-img { width: 34px; height: 34px; border-radius: 4px; object-fit: cover; }
 
-        /* --- CONTENT GRID: ปรับขนาดใหญ่ตามที่บอก --- */
+        /* --- CONTENT GRID: ปรับขนาดใหญ่ 220px --- */
         .container { padding: 100px 4% 40px; }
-        .section-title { font-size: 1.6rem; margin-bottom: 25px; font-weight: 500; }
+        .section-title { font-size: 1.6rem; margin-bottom: 25px; font-weight: 500; border-left: 4px solid var(--netflix-red); padding-left: 15px; }
         
         .content-grid {
             display: grid;
-            /* ปรับจาก 160px เป็น 220px เพื่อให้การ์ดใหญ่ขึ้น */
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 25px; 
-            margin-bottom: 50px;
+            gap: 25px; margin-bottom: 50px;
         }
 
         .card {
@@ -63,7 +64,7 @@
             background: #222;
             border-radius: 8px;
             overflow: hidden;
-            aspect-ratio: 2 / 3; /* ทรงสูงแนวตั้ง */
+            aspect-ratio: 2 / 3;
             transition: 0.3s;
             cursor: pointer;
         }
@@ -77,14 +78,21 @@
         }
         .card-title { font-size: 1rem; color: #fff; line-height: 1.2; }
 
-        /* --- ADMIN: รูปแบบเดิม --- */
-        #admin-panel { display: none; background: #111; padding: 20px; border-radius: 8px; margin: 100px 4% 0; border: 1px dashed #444; }
-        .admin-row { display: grid; grid-template-columns: 2fr 2fr 1fr auto; gap: 10px; }
+        /* --- ADMIN PANEL --- */
+        #admin-panel {
+            display: none; background: #111; padding: 25px; border-radius: 10px;
+            margin: 100px 4% 0; border: 1px solid #333;
+        }
+        .admin-row { display: grid; grid-template-columns: 2fr 2fr 1fr auto; gap: 10px; margin-bottom: 15px; }
 
-        /* --- AUTH: รูปแบบเดิม --- */
+        /* --- AUTH --- */
         .auth-card { max-width: 400px; margin: 15vh auto; background: rgba(0,0,0,0.85); padding: 50px; border-radius: 8px; text-align: center; }
         .btn-red { background: var(--netflix-red); color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: 600; width: 100%; }
-        input, select { padding: 10px; background: #333; border: 1px solid #444; color: white; border-radius: 4px; }
+        input, select { padding: 10px; background: #333; border: 1px solid #444; color: white; border-radius: 4px; width: 100%; }
+        
+        /* MODAL */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 2000; }
+        .modal-content { background: #181818; width: 90%; max-width: 600px; padding: 30px; border-radius: 12px; position: relative; }
     </style>
 </head>
 <body>
@@ -110,8 +118,8 @@
 
 <div id="admin-panel">
     <div class="admin-row">
-        <input type="text" id="adm-title" placeholder="ชื่อเรื่อง">
-        <input type="text" id="adm-img" placeholder="URL ปก">
+        <input type="text" id="adm-title" placeholder="ชื่อเรื่องหลัก">
+        <input type="text" id="adm-img" placeholder="URL ปกหลัก">
         <select id="adm-cat">
             <option value="Anime">Anime</option>
             <option value="Movie">Movie</option>
@@ -119,19 +127,29 @@
         </select>
         <button class="btn-red" onclick="addToDatabase()" style="width:80px;">บันทึก</button>
     </div>
+    <div id="season-inputs"></div>
+    <button onclick="addSeasonField()" style="background:#222; color:#ccc; border:1px solid #444; padding:5px; border-radius:4px; cursor:pointer;">+ เพิ่มซีซัน</button>
 </div>
 
 <div id="auth-ui" class="auth-card">
-    <h1 style="margin-bottom:30px;">Sign In</h1>
-    <input type="email" id="email" placeholder="อีเมล" style="width:100%; margin-bottom:10px;">
-    <input type="password" id="password" placeholder="รหัสผ่าน" style="width:100%; margin-bottom:20px;">
-    <button class="btn-red" onclick="runAuth()">เข้าสู่ระบบ</button>
-    <p style="margin-top:20px; font-size:0.9rem; color:#aaa;" onclick="toggleAuth()">ยังไม่มีบัญชี? <b style="color:white; cursor:pointer;">สมัครสมาชิกที่นี่</b></p>
+    <h1 id="auth-title" style="margin-bottom:30px;">Sign In</h1>
+    <input type="email" id="email" placeholder="อีเมล" style="margin-bottom:10px;">
+    <input type="password" id="password" placeholder="รหัสผ่าน" style="margin-bottom:20px;">
+    <button class="btn-red" onclick="runAuth()" id="auth-btn">เข้าสู่ระบบ</button>
+    <p style="margin-top:20px; font-size:0.9rem; color:#aaa;" onclick="toggleAuth()" id="auth-switch">ยังไม่มีบัญชี? <b style="color:white; cursor:pointer;">สมัครสมาชิกที่นี่</b></p>
 </div>
 
 <div id="main-ui" class="container" style="display:none;">
     <h2 class="section-title" id="cat-label">รายการแนะนำสำหรับคุณ</h2>
     <div class="content-grid" id="main-grid"></div>
+</div>
+
+<div id="detail-modal" class="modal">
+    <div class="modal-content">
+        <h3 id="modal-title"></h3>
+        <div id="season-list" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:10px; margin-top:20px;"></div>
+        <button class="btn-red" onclick="document.getElementById('detail-modal').style.display='none'" style="margin-top:20px;">ปิด</button>
+    </div>
 </div>
 
 <script type="module">
@@ -153,7 +171,23 @@
     const db = getFirestore(app);
     const ADMIN_MAIL = "tungpanithan1931@gmail.com";
 
+    let isRegister = false;
     let allData = [];
+
+    // ฟังก์ชันสลับ Sign In / Sign Up
+    window.toggleAuth = () => {
+        isRegister = !isRegister;
+        document.getElementById('auth-title').innerText = isRegister ? "Sign Up" : "Sign In";
+        document.getElementById('auth-btn').innerText = isRegister ? "สมัครสมาชิก" : "เข้าสู่ระบบ";
+        document.getElementById('auth-switch').innerHTML = isRegister ? "มีบัญชีแล้ว? <b style='color:white;'>เข้าสู่ระบบ</b>" : "ยังไม่มีบัญชี? <b style='color:white;'>สมัครสมาชิกที่นี่</b>";
+    };
+
+    window.runAuth = () => {
+        const m = document.getElementById('email').value;
+        const p = document.getElementById('password').value;
+        if(isRegister) createUserWithEmailAndPassword(auth, m, p).catch(e => alert(e.message));
+        else signInWithEmailAndPassword(auth, m, p).catch(e => alert(e.message));
+    };
 
     onAuthStateChanged(auth, async user => {
         if(user) {
@@ -185,12 +219,47 @@
     function render(list) {
         const grid = document.getElementById('main-grid'); grid.innerHTML = "";
         list.forEach(item => {
-            grid.innerHTML += `<div class="card"><img src="${item.image}"><div class="card-overlay"><div class="card-title">${item.title}</div></div></div>`;
+            grid.innerHTML += `
+                <div class="card" onclick="openDetails('${item.id}')">
+                    <img src="${item.image}">
+                    <div class="card-overlay"><div class="card-title">${item.title}</div></div>
+                </div>`;
         });
     }
 
-    window.runAuth = () => {
-        signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value).catch(e => alert(e.message));
+    // ระบบหลายซีซัน
+    window.openDetails = (id) => {
+        const item = allData.find(x => x.id === id);
+        document.getElementById('modal-title').innerText = item.title;
+        const list = document.getElementById('season-list'); list.innerHTML = "";
+        if(item.seasons) {
+            item.seasons.forEach(s => {
+                list.innerHTML += `<div style="background:#222; border-radius:6px; overflow:hidden;"><img src="${s.image}" style="width:100%; aspect-ratio:2/3; object-fit:cover;"><div style="padding:5px; text-align:center; font-size:0.8rem;">${s.name}</div></div>`;
+            });
+        }
+        document.getElementById('detail-modal').style.display = 'flex';
+    };
+
+    // ส่วนของ Admin: เพิ่มซีซัน
+    window.addSeasonField = () => {
+        const container = document.getElementById('season-inputs');
+        const div = document.createElement('div');
+        div.className = "admin-row";
+        div.innerHTML = `<input type="text" class="sn" placeholder="ชื่อซีซัน (SS1)"><input type="text" class="si" placeholder="URL ปกซีซัน"><button onclick="this.parentElement.remove()" style="background:red; color:white; border:none; border-radius:4px;">X</button>`;
+        container.appendChild(div);
+    };
+
+    window.addToDatabase = async () => {
+        const title = document.getElementById('adm-title').value;
+        const image = document.getElementById('adm-img').value;
+        const category = document.getElementById('adm-cat').value;
+        const sns = document.querySelectorAll('.sn');
+        const sis = document.querySelectorAll('.si');
+        let seasons = [];
+        sns.forEach((s, i) => { if(s.value) seasons.push({ name: s.value, image: sis[i].value || image }); });
+
+        await addDoc(collection(db, "all_anime"), { title, image, category, seasons, created: new Date() });
+        location.reload();
     };
 
     window.handleSearch = () => {
@@ -203,12 +272,9 @@
         render(c === 'All' ? allData : allData.filter(x => x.category === c));
     };
 
-    window.addToDatabase = async () => {
-        const title = document.getElementById('adm-title').value;
-        const image = document.getElementById('adm-img').value;
-        const category = document.getElementById('adm-cat').value;
-        await addDoc(collection(db, "all_anime"), { title, image, category, seasons: [], created: new Date() });
-        location.reload();
+    window.onscroll = () => {
+        const nav = document.getElementById('navbar');
+        window.pageYOffset > 50 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled');
     };
 </script>
 </body>
