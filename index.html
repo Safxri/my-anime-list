@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY HUB | v38 Pro Login UI</title>
+    <title>MY HUB | v39 Season Alignment & Delete</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root { --netflix-red: #E50914; --netflix-black: #141414; --nav-height: 70px; }
@@ -19,25 +19,14 @@
         .search-box { width: 260px; height: 36px; }
         .search-box input { background: rgba(255,255,255,0.12); border: 1px solid #333; border-radius: 20px; padding: 0 18px; width: 100%; height: 100%; color: white; outline: none; font-size: 0.85rem; }
 
-        /* --- AUTH CARD: Enhanced Size --- */
+        /* --- AUTH CARD: Enhanced Size & White Link --- */
         .auth-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding-top: var(--nav-height); }
-        .auth-card { 
-            width: 100%;
-            max-width: 450px; /* เพิ่มความกว้าง */
-            background: rgba(0,0,0,0.85); 
-            padding: 60px; /* เพิ่ม Padding ให้ดูโปร่งและใหญ่ขึ้น */
-            border-radius: 12px; 
-            text-align: center; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
+        .auth-card { width: 100%; max-width: 450px; background: rgba(0,0,0,0.85); padding: 60px; border-radius: 12px; text-align: center; }
         .auth-card h1 { font-size: 2rem; margin-bottom: 30px; font-weight: 600; }
         .btn-red { background: var(--netflix-red); color: white; border: none; padding: 14px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: 600; margin-top: 15px; font-size: 1rem; }
-        
-        /* White Link Text */
         #auth-switch { margin-top: 25px; color: #aaa; cursor: pointer; font-size: 0.95rem; }
         #auth-switch b { color: white; text-decoration: none; font-weight: 500; } 
         #auth-switch b:hover { text-decoration: underline; }
-
         input, select { padding: 14px; background: #333; border: 1px solid #444; color: white; border-radius: 6px; width: 100%; margin-bottom: 15px; font-family: 'Kanit'; font-size: 0.95rem; }
 
         /* --- PROFILE & CONTENT --- */
@@ -45,9 +34,20 @@
         .user-avatar { width: 32px; height: 32px; border-radius: 4px; object-fit: cover; }
         .container { padding: 90px 4% 60px; }
         .content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        .card { position: relative; background: #222; border-radius: 12px; overflow: hidden; aspect-ratio: 2/3; cursor: pointer; transition: 0.4s; }
-        .card img { width: 100%; height: 100%; object-fit: cover; }
-        .card-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.95) 70%); padding: 40px 15px 15px; text-align: center; }
+        .card { position: relative; background: #222; border-radius: 12px; overflow: hidden; aspect-ratio: 2/3; cursor: pointer; transition: 0.4s; display: flex; flex-direction: column; }
+        .card img { width: 100%; height: 100%; object-fit: cover; flex-grow: 1; }
+        
+        /* Fixed Title Alignment: ชื่อซีซันอยู่ข้างล่าง */
+        .card-info { 
+            position: absolute; bottom: 0; left: 0; right: 0; 
+            background: linear-gradient(transparent, rgba(0,0,0,0.95) 70%); 
+            padding: 40px 15px 15px; text-align: center; 
+            display: flex; flex-direction: column; justify-content: flex-end; /* Force titles to bottom */
+            height: 100%; /* Cover the card for clickability */
+        }
+        .card-title { font-size: 1.1rem; font-weight: 500; display: block; }
+        .card-season-label { font-size: 0.85rem; color: #2ed573; margin-top: 4px; display: block; font-weight: 300; }
+        
         .check-badge { position: absolute; top: 12px; left: 12px; background: #2ed573; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; z-index: 5; }
         
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
@@ -150,7 +150,7 @@
     window.openProfileModal = (n, a) => { document.getElementById('p-nick').value = n; document.getElementById('p-ava').value = a; document.getElementById('profile-modal').style.display = 'flex'; };
     window.saveProfile = async () => { await setDoc(doc(db, "users", auth.currentUser.uid), { nickname: document.getElementById('p-nick').value, avatar: document.getElementById('p-ava').value }); location.reload(); };
 
-    // --- REST OF LOGIC (DATA & RENDER) ---
+    // --- DATA & RENDER ---
     async function loadData() { const s = await getDocs(query(collection(db, "all_anime"), orderBy("created", "desc"))); allData = s.docs.map(d => ({ id: d.id, ...d.data() })); render(allData); }
     async function loadWatched(uid) {
         const s = await getDocs(query(collection(db, "user_watched"), where("uid", "==", uid), orderBy("timestamp", "desc")));
@@ -168,13 +168,22 @@
             g.innerHTML += `<div class="card">${done ? '<div class="check-badge">✓</div>' : ''}${isAdmin ? `<div style="position:absolute; top:10px; right:10px; z-index:10;"><button onclick="editItem('${item.id}')" style="background:#4dabf7; border:none; color:white; padding:4px 8px; border-radius:4px; font-size:10px; cursor:pointer;">แก้ไข</button></div>`:''}<img src="${item.image}" onclick="openDetail('${item.id}')"><div class="card-info" onclick="openDetail('${item.id}')"><span class="card-title">${item.title}</span><span class="card-season-label">${total} ซีซัน</span></div></div>`;
         });
     }
+
+    // --- ADMIN ACTIONS (Restored Delete Button & Season Add Field) ---
+    window.addSField = (n="", i="") => {
+        const d = document.createElement('div'); d.style = "display:grid; grid-template-columns:1fr 1fr auto; gap:10px; margin-top:5px;";
+        // นำปุ่มลบ (X) กลับมาในแผงแอดมินตามคำสั่ง
+        d.innerHTML = `<input type="text" class="sn" placeholder="ชื่อซีซัน" value="${n}"><input type="text" class="si" placeholder="URL ปก" value="${i}"><button onclick="this.parentElement.remove()" style="background:red; color:white; border:none; border-radius:4px; cursor:pointer;">X</button>`;
+        document.getElementById('season-inputs').appendChild(d);
+    };
+
     window.saveToDB = async () => {
         const sns = document.querySelectorAll('.sn'), sis = document.querySelectorAll('.si'); let s = [];
         sns.forEach((x, i) => { if(x.value) s.push({ name: x.value, image: sis[i].value }); });
         const data = { title: document.getElementById('adm-title').value, image: document.getElementById('adm-img').value, category: document.getElementById('adm-cat').value, seasons: s, created: new Date() };
         if(editId) await updateDoc(doc(db, "all_anime", editId), data); else await addDoc(collection(db, "all_anime"), data); location.reload();
     };
-    window.addSField = (n="", i="") => { const d = document.createElement('div'); d.style = "display:grid; grid-template-columns:1fr 1fr auto; gap:10px; margin-top:5px;"; d.innerHTML = `<input type="text" class="sn" placeholder="ชื่อซีซัน" value="${n}"><input type="text" class="si" placeholder="URL ปก" value="${i}"><button onclick="this.parentElement.remove()" style="background:red; color:white; border:none; border-radius:4px; cursor:pointer;">ลบ</button>`; document.getElementById('season-inputs').appendChild(d); };
+    
     window.editItem = (id) => { editId = id; const item = allData.find(x => x.id === id); document.getElementById('adm-title').value = item.title; document.getElementById('adm-img').value = item.image; document.getElementById('adm-cat').value = item.category; document.getElementById('season-inputs').innerHTML = ""; item.seasons?.forEach(s => addSField(s.name, s.image)); window.scrollTo(0,0); };
     window.openDetail = (id) => {
         const item = allData.find(x => x.id === id); document.getElementById('m-title').innerText = item.title; const l = document.getElementById('m-list'); l.innerHTML = "";
