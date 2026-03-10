@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY HUB | v25 Complete & Fixed</title>
+    <title>MY HUB | v26 Ultimate Features</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root { --netflix-red: #E50914; --netflix-black: #141414; --nav-height: 70px; }
@@ -23,11 +23,7 @@
         .user-box { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .user-img { width: 34px; height: 34px; border-radius: 4px; object-fit: cover; border: 1px solid #444; }
 
-        /* --- ADMIN PANEL --- */
-        #admin-panel { display: none; background: #111; padding: 25px; border-radius: 12px; margin: 90px 4% 0; border: 1px solid #333; }
-        .admin-row { display: grid; grid-template-columns: 2fr 2fr 1fr auto; gap: 10px; margin-bottom: 10px; }
-
-        /* --- CONTENT GRID (LARGE: 220px) --- */
+        /* --- CONTENT GRID --- */
         .container { padding: 100px 4% 40px; }
         .section-title { font-size: 1.6rem; margin: 30px 0 20px; border-left: 4px solid var(--netflix-red); padding-left: 15px; }
         .content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
@@ -36,7 +32,19 @@
         .card img { width: 100%; height: 100%; object-fit: cover; }
         .card-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); padding: 30px 10px 10px; text-align: center; }
         .card-title { font-size: 1rem; color: #fff; }
-        .btn-del-card { position: absolute; top: 8px; right: 8px; background: rgba(229, 9, 20, 0.9); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; z-index: 10; font-weight: 600; }
+
+        /* --- ADMIN TOOLS --- */
+        #admin-panel { display: none; background: #111; padding: 25px; border-radius: 12px; margin: 90px 4% 0; border: 1px solid #333; }
+        .admin-row { display: grid; grid-template-columns: 2fr 2fr 1fr auto; gap: 10px; margin-bottom: 10px; }
+        .admin-btns { position: absolute; top: 8px; right: 8px; display: flex; gap: 5px; z-index: 10; }
+        .btn-action { background: rgba(0,0,0,0.7); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; }
+        .btn-del { color: #ff4d4d; }
+        .btn-edit { color: #4dabf7; }
+
+        /* --- HISTORY CLEAR BUTTON --- */
+        .history-card { position: relative; }
+        .btn-clear-history { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.8); color: white; border: none; width: 22px; height: 22px; border-radius: 50%; cursor: pointer; font-size: 12px; z-index: 20; display: none; }
+        .history-card:hover .btn-clear-history { display: flex; align-items: center; justify-content: center; }
 
         /* --- AUTH & MODALS --- */
         .auth-card { max-width: 400px; margin: 15vh auto; background: rgba(0,0,0,0.85); padding: 50px; border-radius: 8px; text-align: center; }
@@ -44,6 +52,7 @@
         input, select { padding: 12px; background: #333; border: 1px solid #444; color: white; border-radius: 4px; width: 100%; margin-bottom: 10px; font-family: 'Kanit'; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 2000; }
         .modal-content { background: #181818; width: 90%; max-width: 700px; padding: 30px; border-radius: 12px; position: relative; text-align: center; }
+        
         .season-card { background: #222; border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; border: 2px solid transparent; }
         .season-card.watched { border-color: #2ed573; }
         .check-mark { position: absolute; top: 5px; right: 5px; background: #2ed573; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
@@ -68,12 +77,12 @@
 </nav>
 
 <div id="admin-panel">
-    <h4 style="color:var(--netflix-red); margin-top:0;">แผงควบคุมแอดมิน</h4>
+    <h4 id="adm-header" style="color:var(--netflix-red); margin-top:0;">แผงควบคุมแอดมิน</h4>
     <div class="admin-row">
         <input type="text" id="adm-title" placeholder="ชื่อเรื่อง">
         <input type="text" id="adm-img" placeholder="URL ปกหลัก">
         <select id="adm-cat"><option value="Anime">Anime</option><option value="Movie">Movie</option><option value="Series">Series</option></select>
-        <button class="btn-red" onclick="addToDatabase()" style="width:80px; margin:0;">บันทึก</button>
+        <button class="btn-red" id="adm-btn-save" onclick="addToDatabase()" style="width:80px; margin:0;">บันทึก</button>
     </div>
     <div id="season-inputs"></div>
     <button onclick="addSeasonField()" style="background:#222; color:#ccc; border:1px solid #444; padding:5px; border-radius:4px; cursor:pointer;">+ เพิ่มซีซัน</button>
@@ -84,7 +93,7 @@
     <input type="email" id="email" placeholder="อีเมล">
     <input type="password" id="password" placeholder="รหัสผ่าน">
     <button class="btn-red" onclick="runAuth()" id="auth-btn">เข้าสู่ระบบ</button>
-    <p style="margin-top:20px; font-size:0.9rem; color:#aaa;" onclick="toggleAuth()" id="auth-switch">ยังไม่มีบัญชี? <b style="color:white; cursor:pointer;">สมัครสมาชิกที่นี่</b></p>
+    <p style="margin-top:20px; font-size:0.9rem; color:#aaa;" onclick="toggleAuth()" id="auth-switch">ยังไม่มีบัญชี? <b style="color:white; cursor:pointer;">สมัครสมาชิก</b></p>
 </div>
 
 <div id="main-ui" class="container" style="display:none;">
@@ -118,7 +127,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, addDoc, getDocs, query, where, orderBy, deleteDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyADNWKhUNqKyF19d-2WBHsHQ1uaZIAN8Bg",
@@ -134,15 +143,13 @@
     const db = getFirestore(app);
     const ADMIN_MAIL = "tungpanithan1931@gmail.com";
 
-    let isRegister = false, allData = [], watchedList = [];
+    let isRegister = false, allData = [], watchedListRaw = [], editingId = null;
 
-    // แก้ไขปัญหา Logout Error โดยการผูกกับ window
     window.triggerLogout = () => signOut(auth).then(() => location.reload());
     window.toggleAuth = () => {
         isRegister = !isRegister;
         document.getElementById('auth-title').innerText = isRegister ? "Sign Up" : "Sign In";
         document.getElementById('auth-btn').innerText = isRegister ? "สมัครสมาชิก" : "เข้าสู่ระบบ";
-        document.getElementById('auth-switch').innerHTML = isRegister ? "มีบัญชีแล้ว? <b style='color:white;'>เข้าสู่ระบบ</b>" : "ยังไม่มีบัญชี? <b style='color:white;'>สมัครสมาชิกที่นี่</b>";
     };
 
     window.runAuth = () => {
@@ -157,15 +164,10 @@
             document.getElementById('main-ui').style.display = 'block';
             document.getElementById('nav-right').style.display = 'flex';
             if(user.email === ADMIN_MAIL) document.getElementById('admin-panel').style.display = 'block';
-            
             const uDoc = await getDoc(doc(db, "users", user.uid));
             let nick = user.email.split('@')[0], img = "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png";
             if(uDoc.exists()) { nick = uDoc.data().nickname || nick; img = uDoc.data().avatar || img; }
-            
             document.getElementById('user-display').innerHTML = `<div class="user-box" onclick="document.getElementById('profile-modal').style.display='flex'"><span>${nick}</span><img src="${img}" class="user-img"></div>`;
-            document.getElementById('edit-nickname').value = nick;
-            document.getElementById('edit-avatar').value = img;
-            
             loadWatched(user.uid);
             loadData();
         } else {
@@ -174,25 +176,29 @@
         }
     });
 
-    window.saveProfile = async () => {
-        await setDoc(doc(db, "users", auth.currentUser.uid), { nickname: document.getElementById('edit-nickname').value, avatar: document.getElementById('edit-avatar').value }, { merge: true });
-        location.reload();
-    };
-
     async function loadWatched(uid) {
         const q = query(collection(db, "user_watched"), where("uid", "==", uid), orderBy("timestamp", "desc"));
         const snap = await getDocs(q);
-        watchedList = [];
         const grid = document.getElementById('watched-grid'); grid.innerHTML = "";
+        watchedListRaw = [];
         if(!snap.empty) {
             document.getElementById('watched-section').style.display = 'block';
             snap.forEach(d => {
                 const data = d.data();
-                watchedList.push(`${data.mainTitle}|${data.seasonName}`);
-                grid.innerHTML += `<div class="card" style="opacity:0.8; scale:0.95;"><img src="${data.image}"><div class="card-overlay"><div class="card-title">${data.mainTitle}<br><small style="color:#2ed573">${data.seasonName}</small></div></div></div>`;
+                watchedListRaw.push({id: d.id, key: `${data.mainTitle}|${data.seasonName}`});
+                grid.innerHTML += `
+                    <div class="card history-card" style="opacity:0.8; scale:0.95;">
+                        <button class="btn-clear-history" onclick="removeFromHistory('${d.id}')">✕</button>
+                        <img src="${data.image}">
+                        <div class="card-overlay"><div class="card-title">${data.mainTitle}<br><small style="color:#2ed573">${data.seasonName}</small></div></div>
+                    </div>`;
             });
-        }
+        } else { document.getElementById('watched-section').style.display = 'none'; }
     }
+
+    window.removeFromHistory = async (id) => {
+        if(confirm('เอาออกจากประวัติการดู?')) { await deleteDoc(doc(db, "user_watched", id)); loadWatched(auth.currentUser.uid); }
+    };
 
     async function loadData() {
         const snap = await getDocs(query(collection(db, "all_anime"), orderBy("created", "desc")));
@@ -206,20 +212,40 @@
         list.forEach(item => {
             grid.innerHTML += `
                 <div class="card">
-                    ${isAdmin ? `<button class="btn-del-card" onclick="deleteItem('${item.id}')">ลบ</button>` : ''}
+                    ${isAdmin ? `
+                        <div class="admin-btns">
+                            <button class="btn-action btn-edit" onclick="editItem('${item.id}')">แก้ไข</button>
+                            <button class="btn-action btn-del" onclick="deleteItem('${item.id}')">ลบ</button>
+                        </div>` : ''}
                     <img src="${item.image}" onclick="openDetails('${item.id}')">
                     <div class="card-overlay" onclick="openDetails('${item.id}')"><div class="card-title">${item.title}</div></div>
                 </div>`;
         });
     }
 
+    window.editItem = (id) => {
+        editingId = id;
+        const item = allData.find(x => x.id === id);
+        document.getElementById('adm-header').innerText = "แก้ไข: " + item.title;
+        document.getElementById('adm-title').value = item.title;
+        document.getElementById('adm-img').value = item.image;
+        document.getElementById('adm-cat').value = item.category;
+        document.getElementById('season-inputs').innerHTML = "";
+        if(item.seasons) {
+            item.seasons.forEach(s => addSeasonField(s.name, s.image));
+        }
+        document.getElementById('adm-btn-save').innerText = "อัปเดต";
+        window.scrollTo(0,0);
+    };
+
     window.openDetails = (id) => {
         const item = allData.find(x => x.id === id);
         document.getElementById('modal-title').innerText = item.title;
         const list = document.getElementById('season-list'); list.innerHTML = "";
+        const keys = watchedListRaw.map(x => x.key);
         if(item.seasons) {
             item.seasons.forEach(s => {
-                const isWatched = watchedList.includes(`${item.title}|${s.name}`);
+                const isWatched = keys.includes(`${item.title}|${s.name}`);
                 list.innerHTML += `
                     <div class="season-card ${isWatched ? 'watched' : ''}" onclick="markAsWatched('${item.title}', '${s.name}', '${s.image}')">
                         ${isWatched ? '<div class="check-mark">✓</div>' : ''}
@@ -232,25 +258,27 @@
     };
 
     window.markAsWatched = async (mainTitle, seasonName, image) => {
-        if(watchedList.includes(`${mainTitle}|${seasonName}`)) return;
+        if(watchedListRaw.map(x => x.key).includes(`${mainTitle}|${seasonName}`)) return;
         await addDoc(collection(db, "user_watched"), { uid: auth.currentUser.uid, mainTitle, seasonName, image, timestamp: new Date() });
-        location.reload();
+        loadWatched(auth.currentUser.uid); closeModal('detail-modal');
     };
 
-    window.addSeasonField = () => {
+    window.addSeasonField = (name = "", img = "") => {
         const div = document.createElement('div'); div.className = "admin-row";
-        div.innerHTML = `<input type="text" class="sn" placeholder="ชื่อซีซัน"><input type="text" class="si" placeholder="URL ปกซีซัน"><button onclick="this.parentElement.remove()" style="background:red; color:white; border:none; border-radius:4px;">X</button>`;
+        div.innerHTML = `<input type="text" class="sn" placeholder="ชื่อซีซัน" value="${name}"><input type="text" class="si" placeholder="URL ปก" value="${img}"><button onclick="this.parentElement.remove()" style="background:red; color:white; border:none; border-radius:4px;">X</button>`;
         document.getElementById('season-inputs').appendChild(div);
     };
 
     window.addToDatabase = async () => {
         const sns = document.querySelectorAll('.sn'), sis = document.querySelectorAll('.si'); let seasons = [];
         sns.forEach((s, i) => { if(s.value) seasons.push({ name: s.value, image: sis[i].value || document.getElementById('adm-img').value }); });
-        await addDoc(collection(db, "all_anime"), { title: document.getElementById('adm-title').value, image: document.getElementById('adm-img').value, category: document.getElementById('adm-cat').value, seasons, created: new Date() });
+        const data = { title: document.getElementById('adm-title').value, image: document.getElementById('adm-img').value, category: document.getElementById('adm-cat').value, seasons, created: new Date() };
+        if(editingId) { await updateDoc(doc(db, "all_anime", editingId), data); }
+        else { await addDoc(collection(db, "all_anime"), data); }
         location.reload();
     };
 
-    window.deleteItem = async (id) => { if(confirm('ลบข้อมูลนี้?')) { await deleteDoc(doc(db, "all_anime", id)); location.reload(); } };
+    window.deleteItem = async (id) => { if(confirm('ลบ?')) { await deleteDoc(doc(db, "all_anime", id)); location.reload(); } };
     window.closeModal = (id) => document.getElementById(id).style.display = 'none';
     window.handleSearch = () => render(allData.filter(x => x.title.toLowerCase().includes(document.getElementById('search-input').value.toLowerCase())));
     window.filterCategory = (c) => render(c === 'All' ? allData : allData.filter(x => x.category === c));
