@@ -3,35 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY HUB | v49 Absolute Real-time Full Version</title>
+    <title>MY HUB | v52 Full Code Absolute</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS VARIABLES & GLOBAL --- */
+        /* =========================================
+           1. GLOBAL STYLE & VARIABLES
+           ========================================= */
         :root {
             --netflix-red: #E50914;
             --netflix-black: #141414;
-            --glass-bg: rgba(30, 30, 30, 0.95);
             --card-radius: 12px;
             --nav-height: 70px;
         }
 
         * {
             box-sizing: border-box;
-            transition: background-color 0.3s, transform 0.3s;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             font-family: 'Kanit', sans-serif;
             background-color: var(--netflix-black);
             color: white;
-            margin: 0;
-            padding: 0;
             overflow-x: hidden;
         }
 
-        /* --- NAVIGATION: Clean & Modern --- */
+        /* =========================================
+           2. NAVIGATION BAR
+           ========================================= */
         nav {
-            background: rgba(0,0,0,0.95);
+            background: rgba(0, 0, 0, 0.95);
             padding: 0 4%;
             display: flex;
             align-items: center;
@@ -41,7 +43,7 @@
             top: 0;
             width: 100%;
             z-index: 1000;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
         }
 
@@ -63,8 +65,6 @@
             display: flex;
             list-style: none;
             gap: 25px;
-            padding: 0;
-            margin: 0;
             cursor: pointer;
             color: #e5e5e5;
             font-size: 0.95rem;
@@ -80,49 +80,29 @@
             gap: 20px;
         }
 
-        .search-box {
-            position: relative;
-        }
-
-        .search-box input {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid #444;
-            border-radius: 20px;
-            padding: 8px 20px;
-            width: 280px;
-            color: white;
-            outline: none;
-            font-size: 0.9rem;
-        }
-
-        .search-box input:focus {
-            border-color: var(--netflix-red);
-            background: rgba(255,255,255,0.2);
-        }
-
-        /* --- AUTHENTICATION: 450px Card --- */
+        /* =========================================
+           3. AUTHENTICATION (Login/Register)
+           ========================================= */
         .auth-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://assets.nflxext.com/ffe/siteui/vlv3/f8ca36a4-ac20-4af2-9645-092df8591476/be0195e3-4610-4f81-9993-47000780f2d7/TH-en-20220523-popsignuptwoweeks-perspective_alpha_website_large.jpg');
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://assets.nflxext.com/ffe/siteui/vlv3/f8ca36a4-ac20-4af2-9645-092df8591476/be0195e3-4610-4f81-9993-47000780f2d7/TH-en-20220523-popsignuptwoweeks-perspective_alpha_website_large.jpg');
             background-size: cover;
-            background-position: center;
         }
 
         .auth-card {
-            width: 100%;
-            max-width: 450px;
-            background: rgba(0,0,0,0.85);
+            width: 450px;
+            background: rgba(0, 0, 0, 0.85);
             padding: 60px;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             text-align: left;
         }
 
         .auth-card h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             margin-bottom: 25px;
         }
 
@@ -147,47 +127,19 @@
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .btn-red:hover {
-            background: #ff0a16;
         }
 
         .auth-switch {
             margin-top: 30px;
             color: #8c8c8c;
-            font-size: 1rem;
             cursor: pointer;
         }
 
-        .auth-switch b {
-            color: white; /* สมัครสมาชิกสีขาว */
-        }
-
-        /* --- CONTENT SECTION --- */
+        /* =========================================
+           4. CONTENT GRID & CARDS
+           ========================================= */
         .container {
             padding: 100px 4% 50px;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin: 40px 0 25px;
-        }
-
-        .title-line {
-            height: 30px;
-            width: 5px;
-            background: var(--netflix-red);
-            border-radius: 10px;
-        }
-
-        .section-title {
-            font-size: 1.6rem;
-            font-weight: 500;
-            margin: 0;
         }
 
         .content-grid {
@@ -196,7 +148,6 @@
             gap: 25px;
         }
 
-        /* --- CARD STYLING --- */
         .card {
             position: relative;
             background: #181818;
@@ -204,13 +155,11 @@
             overflow: hidden;
             aspect-ratio: 2/3;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
         }
 
         .card:hover {
             transform: scale(1.05);
-            z-index: 5;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
         }
 
         .card img {
@@ -224,26 +173,12 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.95) 75%);
-            padding: 50px 15px 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9) 70%);
+            padding: 20px;
             text-align: center;
         }
 
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 500;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .card-season {
-            font-size: 0.85rem;
-            color: #2ed573;
-            display: block;
-            font-weight: 300;
-        }
-
-        /* --- GREEN CHECK BADGE --- */
+        /* Green Checkmark Badge */
         .check-badge {
             position: absolute;
             top: 15px;
@@ -256,84 +191,75 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
             font-weight: bold;
-            z-index: 100;
             border: 2px solid white;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
-            animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 10;
         }
 
-        @keyframes popIn {
-            0% { transform: scale(0); }
-            100% { transform: scale(1); }
-        }
-
-        /* --- ADMIN PANEL --- */
-        #admin-panel {
-            background: var(--glass-bg);
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 40px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .admin-row {
-            display: grid;
-            grid-template-columns: 2fr 2fr 1fr auto;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .admin-row input, .admin-row select {
-            background: #222;
-            border: 1px solid #444;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            outline: none;
-        }
-
-        /* --- MODALS --- */
+        /* =========================================
+           5. MODALS (Profile & Details)
+           ========================================= */
         .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.92);
+            background: rgba(0, 0, 0, 0.9);
             align-items: center;
             justify-content: center;
-            z-index: 5000;
-            backdrop-filter: blur(8px);
+            z-index: 2000;
+            backdrop-filter: blur(10px);
         }
 
         .modal-content {
-            background: #1a1a1a;
+            background: #181818;
             width: 90%;
-            max-width: 500px;
-            padding: 50px;
-            border-radius: 25px;
-            position: relative;
+            max-width: 450px;
+            padding: 40px;
+            border-radius: 20px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            border: 1px solid #333;
+        }
+
+        /* จัดตำแหน่งช่องกรอกโปรไฟล์ */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            margin-bottom: 10px;
         }
 
         .close-btn {
             position: absolute;
             top: 20px;
             right: 20px;
-            font-size: 2rem;
-            color: #666;
+            font-size: 1.5rem;
             cursor: pointer;
+            color: #666;
         }
 
+        /* =========================================
+           6. USER PROFILE DISPLAY
+           ========================================= */
         .user-profile {
             display: flex;
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 20px;
         }
 
         .user-avatar {
@@ -341,7 +267,6 @@
             height: 38px;
             border-radius: 4px;
             object-fit: cover;
-            border: 1px solid #444;
         }
     </style>
 </head>
@@ -349,81 +274,59 @@
 
 <nav>
     <div class="nav-left">
-        <a class="nav-logo" onclick="location.reload()">MY HUB</a>
+        <div class="nav-logo" onclick="location.reload()">MY HUB</div>
         <ul class="nav-menu">
-            <li onclick="window.showHome()">หน้าหลัก</li>
-            <li onclick="window.filterCat('Anime')">อนิเมะ</li>
-            <li onclick="window.filterCat('Movie')">หนัง</li>
-            <li onclick="window.showHistory()" style="color:#2ed573;">ประวัติ</li>
+            <li onclick="window.goHome()">หน้าหลัก</li>
+            <li onclick="window.showHistory()">ประวัติการดู</li>
         </ul>
     </div>
-    <div class="nav-right" id="nav-right" style="display:none;">
-        <div class="search-box">
-            <input type="text" id="search-input" placeholder="ค้นหาชื่อเรื่อง..." onkeyup="window.handleSearch()">
-        </div>
-        <div id="profile-area"></div>
+    <div class="nav-right" id="nav-right-area" style="display:none;">
+        <div id="user-display-slot"></div>
     </div>
 </nav>
 
-<div id="auth-ui" class="auth-wrapper">
+<div id="auth-section" class="auth-wrapper">
     <div class="auth-card">
-        <h1 id="auth-title">Sign In</h1>
-        <input type="email" id="email-field" placeholder="อีเมล">
-        <input type="password" id="pass-field" placeholder="รหัสผ่าน">
-        <button class="btn-red" onclick="window.processAuth()" id="auth-btn">เข้าสู่ระบบ</button>
+        <h1 id="auth-headline">Sign In</h1>
+        <input type="email" id="user-email" placeholder="อีเมล">
+        <input type="password" id="user-pass" placeholder="รหัสผ่าน">
+        <button class="btn-red" onclick="window.executeAuth()">เข้าสู่ระบบ</button>
         <p class="auth-switch" onclick="window.toggleAuthMode()">ยังไม่มีบัญชีใช่ไหม? <b>สมัครสมาชิกที่นี่</b></p>
     </div>
 </div>
 
-<div id="main-ui" class="container" style="display:none;">
-    
-    <div id="admin-panel" style="display:none;">
-        <h3 style="color:var(--netflix-red); margin-top:0;">ADMIN MANAGEMENT</h3>
-        <div class="admin-row">
-            <input type="text" id="adm-title" placeholder="ชื่อเรื่อง">
-            <input type="text" id="adm-img" placeholder="URL รูปปกหลัก">
-            <select id="adm-cat">
-                <option value="Anime">Anime</option>
-                <option value="Movie">Movie</option>
-            </select>
-            <button class="btn-red" onclick="window.saveToFirebase()" style="width:120px; margin:0;">บันทึก</button>
-        </div>
-        <div id="season-inputs-area"></div>
-        <button onclick="window.addNewSeasonField()" style="background:none; border:1px dashed #555; color:#888; width:100%; padding:10px; border-radius:10px; cursor:pointer; margin-top:10px;">+ เพิ่มซีซันย่อย</button>
+<div id="main-section" class="container" style="display:none;">
+    <div id="admin-tools" style="display:none; margin-bottom:20px;">
+        <button class="btn-red" style="width:auto; padding:10px 20px;" onclick="window.openAdminAdd()">+ เพิ่มข้อมูลใหม่</button>
     </div>
-
-    <div id="display-area">
-        <div class="section-header">
-            <div class="title-line"></div>
-            <h2 class="section-title" id="grid-label">รายการแนะนำ</h2>
-        </div>
-        <div class="content-grid" id="main-grid"></div>
-    </div>
+    <div class="content-grid" id="main-grid-output"></div>
 </div>
 
 <div id="profile-modal" class="modal">
     <div class="modal-content">
-        <span class="close-btn" onclick="window.closeModal('profile-modal')">&times;</span>
         <h2>แก้ไขโปรไฟล์</h2>
-        <input type="text" id="p-nickname" placeholder="ชื่อเล่น">
-        <input type="text" id="p-avatar-url" placeholder="URL รูปโปรไฟล์">
-        <button class="btn-red" onclick="window.updateProfile()">บันทึกข้อมูล</button>
-        <button class="btn-red" style="background:#222; margin-top:10px;" onclick="window.logout()">ออกจากระบบ</button>
-    </div>
-</div>
+        <p style="color:#888; margin-bottom:20px;">จัดการข้อมูลส่วนตัวของคุณ</p>
+        
+        <div class="input-group">
+            <label>ชื่อเล่นของคุณ</label>
+            <input type="text" id="edit-nick-input" placeholder="ตัวอย่าง: Admin_M">
+        </div>
 
-<div id="detail-modal" class="modal">
-    <div class="modal-content" style="max-width:900px; text-align:left;">
-        <span class="close-btn" onclick="window.closeModal('detail-modal')">&times;</span>
-        <h2 id="modal-main-title" style="border-bottom: 2px solid var(--netflix-red); padding-bottom:10px; margin-bottom:30px;"></h2>
-        <div id="episodes-list" class="content-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));"></div>
+        <div class="input-group">
+            <label>URL รูปโปรไฟล์ (Link)</label>
+            <input type="text" id="edit-avatar-input" placeholder="ใส่ลิงก์รูปภาพ https://...">
+        </div>
+
+        <button class="btn-red" onclick="window.updateUserProfile()">บันทึกข้อมูล</button>
+        <button class="btn-red" style="background:#333; margin-top:10px;" onclick="window.appLogout()">ออกจากระบบ</button>
+        <p onclick="window.closeModal('profile-modal')" style="margin-top:20px; cursor:pointer; color:#666;">ปิดหน้าต่าง</p>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
     // Firebase Config
     const firebaseConfig = {
@@ -438,269 +341,121 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const ADMIN_EMAIL = "tungpanithan1931@gmail.com";
 
-    // Local States (Global window variables for real-time access)
-    window.masterAnimeList = [];
-    window.masterWatchedList = [];
-    let isRegistering = false;
-    let currentEditingId = null;
+    // APP DATA STORAGE
+    window.fullDataList = [];
+    let isSignUpMode = false;
 
-    // --- 1. RENDER LOGIC (THE CORE) ---
-    
-    window.renderMainGrid = (listToRender) => {
-        const grid = document.getElementById('main-grid');
-        if (!grid) return;
-        grid.innerHTML = "";
-        
-        const isAdmin = auth.currentUser?.email === ADMIN_EMAIL;
-
-        listToRender.forEach(item => {
-            // Logic เช็คว่าดูจบทั้งเรื่องหรือยัง
-            const watchedCount = window.masterWatchedList.filter(w => w.key.startsWith(item.title + "|")).length;
-            const totalInItem = item.seasons?.length || 0;
-            const isFinished = totalInItem > 0 && watchedCount >= totalInItem;
-
-            grid.innerHTML += `
-                <div class="card">
-                    ${isFinished ? '<div class="check-badge">✓</div>' : ''}
-                    ${isAdmin ? `<button onclick="window.prepareEdit('${item.id}')" style="position:absolute; top:10px; right:10px; z-index:30; background:#007bff; color:white; border:none; padding:5px 8px; border-radius:4px; font-size:10px; cursor:pointer;">แก้ไข</button>` : ''}
-                    <img src="${item.image}" onclick="window.openDetails('${item.id}')">
-                    <div class="card-info" onclick="window.openDetails('${item.id}')">
-                        <span class="card-title">${item.title}</span>
-                        <span class="card-season">${totalInItem} ซีซัน</span>
-                    </div>
-                </div>`;
-        });
-    };
-
-    // --- 2. REAL-TIME SYNC LOGIC ---
-    window.markAsWatched = async (mainTitle, sName, sImg, index) => {
-        const badgeElement = document.getElementById(`ep-badge-${index}`);
-        if(badgeElement.style.display === 'flex') return;
-
-        // ขั้นตอน "เด้งทันที":
-        // 1. แสดงติ๊กถูกใน Modal
-        badgeElement.style.display = 'flex';
-        
-        // 2. อัปเดตข้อมูลจำลองในเครื่องทันที
-        window.masterWatchedList.push({ key: `${mainTitle}|${sName}` });
-
-        // 3. สั่งวาดหน้าหลักใหม่ทันที (หน้าหลักจะเด้งเขียวตาม)
-        window.renderMainGrid(window.masterAnimeList);
-
-        // 4. บันทึกจริงลง Database ในเบื้องหลัง
-        try {
-            await addDoc(collection(db, "user_watched"), {
-                uid: auth.currentUser.uid,
-                mainTitle: mainTitle,
-                seasonName: sName,
-                image: sImg,
-                timestamp: new Date()
-            });
-        } catch (error) {
-            console.error("Firebase Sync Error:", error);
-        }
-    };
-
-    // --- 3. AUTHENTICATION & INITIALIZATION ---
-    onAuthStateChanged(auth, async user => {
-        if(user) {
-            document.getElementById('auth-ui').style.display = 'none';
-            document.getElementById('main-ui').style.display = 'block';
-            document.getElementById('nav-right').style.display = 'flex';
+    // --- 1. AUTHENTICATION WATCHER ---
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            // Logged In
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('main-section').style.display = 'block';
+            document.getElementById('nav-right-area').style.display = 'flex';
             
-            if(user.email === ADMIN_EMAIL) {
-                document.getElementById('admin-panel').style.display = 'block';
-            }
-
-            // Load Data
-            await refreshData();
-            await loadProfileData(user.uid, user.email);
+            await fetchProfile(user);
+            await loadMainContent();
         } else {
-            document.getElementById('auth-ui').style.display = 'flex';
-            document.getElementById('main-ui').style.display = 'none';
+            // Logged Out
+            document.getElementById('auth-section').style.display = 'flex';
+            document.getElementById('main-section').style.display = 'none';
+            document.getElementById('nav-right-area').style.display = 'none';
         }
     });
 
-    async function refreshData() {
-        // Load Watch History
-        const watchSnap = await getDocs(query(collection(db, "user_watched"), where("uid", "==", auth.currentUser.uid)));
-        window.masterWatchedList = watchSnap.docs.map(d => ({ 
-            id: d.id, 
-            key: `${d.data().mainTitle}|${d.data().seasonName}`,
-            ...d.data()
-        }));
-
-        // Load Anime Items
-        const animeSnap = await getDocs(query(collection(db, "all_anime"), orderBy("created", "desc")));
-        window.masterAnimeList = animeSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-        window.renderMainGrid(window.masterAnimeList);
+    // --- 2. DATA LOADING ---
+    async function loadMainContent() {
+        const snap = await getDocs(query(collection(db, "all_anime"), orderBy("created", "desc")));
+        window.fullDataList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderAll(window.fullDataList);
     }
 
-    async function loadProfileData(uid, email) {
-        const docRef = doc(db, "users", uid);
+    function renderAll(list) {
+        const grid = document.getElementById('main-grid-output');
+        grid.innerHTML = "";
+        list.forEach(item => {
+            grid.innerHTML += `
+                <div class="card" onclick="window.openDetails('${item.id}')">
+                    <img src="${item.image}">
+                    <div class="card-info">
+                        <span class="card-title">${item.title}</span>
+                    </div>
+                </div>`;
+        });
+    }
+
+    async function fetchProfile(user) {
+        const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
-        let nick = email.split('@')[0];
-        let ava = "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png";
         
+        let d_name = user.email.split('@')[0];
+        let d_img = "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png";
+
         if (docSnap.exists()) {
-            nick = docSnap.data().nickname || nick;
-            ava = docSnap.data().avatar || ava;
+            d_name = docSnap.data().nickname || d_name;
+            d_img = docSnap.data().avatar || d_img;
         }
-        
-        document.getElementById('profile-area').innerHTML = `
-            <div class="user-profile" onclick="window.openProfileModal('${nick}','${ava}')">
-                <span>${nick}</span>
-                <img src="${ava}" class="user-avatar">
+
+        document.getElementById('user-display-slot').innerHTML = `
+            <div class="user-profile" onclick="window.openProfileUI('${d_name}', '${d_img}')">
+                <span>${d_name}</span>
+                <img src="${d_img}" class="user-avatar">
             </div>`;
     }
 
-    // --- 4. INTERFACE HELPERS ---
-    window.openDetails = (id) => {
-        const item = window.masterAnimeList.find(x => x.id === id);
-        document.getElementById('modal-main-title').innerText = item.title;
-        const listContainer = document.getElementById('episodes-list');
-        listContainer.innerHTML = "";
-
-        item.seasons?.forEach((s, i) => {
-            const hasWatched = window.masterWatchedList.some(w => w.key === `${item.title}|${s.name}`);
-            listContainer.innerHTML += `
-                <div class="card" onclick="window.markAsWatched('${item.title}','${s.name}','${s.image}',${i})">
-                    <div id="ep-badge-${i}" class="check-badge" style="display:${hasWatched ? 'flex' : 'none'}">✓</div>
-                    <img src="${s.image}">
-                    <div class="card-info">
-                        <span class="card-title" style="font-size:0.9rem;">${s.name}</span>
-                    </div>
-                </div>`;
-        });
-        document.getElementById('detail-modal').style.display = 'flex';
-    };
-
+    // --- 3. WINDOW GLOBAL FUNCTIONS ---
+    
     window.toggleAuthMode = () => {
-        isRegistering = !isRegistering;
-        document.getElementById('auth-title').innerText = isRegistering ? "Sign Up" : "Sign In";
-        document.getElementById('auth-btn').innerText = isRegistering ? "สมัครสมาชิก" : "เข้าสู่ระบบ";
-        document.getElementById('auth-switch').innerHTML = isRegistering ? "มีบัญชีอยู่แล้ว? <b>เข้าสู่ระบบ</b>" : "ยังไม่มีบัญชีใช่ไหม? <b>สมัครสมาชิกที่นี่</b>";
+        isSignUpMode = !isSignUpMode;
+        document.getElementById('auth-headline').innerText = isSignUpMode ? "Sign Up" : "Sign In";
+        document.getElementById('auth-switch').innerHTML = isSignUpMode ? "มีบัญชีแล้วใช่ไหม? <b>เข้าสู่ระบบ</b>" : "ยังไม่มีบัญชีใช่ไหม? <b>สมัครสมาชิกที่นี่</b>";
     };
 
-    window.processAuth = () => {
-        const e = document.getElementById('email-field').value;
-        const p = document.getElementById('pass-field').value;
-        if(isRegistering) {
+    window.executeAuth = () => {
+        const e = document.getElementById('user-email').value;
+        const p = document.getElementById('user-pass').value;
+        if(isSignUpMode) {
             createUserWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
         } else {
-            signInWithEmailAndPassword(auth, e, p).catch(err => alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง"));
+            signInWithEmailAndPassword(auth, e, p).catch(err => alert("อีเมลหรือรหัสผ่านผิด"));
         }
     };
 
-    window.logout = () => signOut(auth).then(() => location.reload());
-    window.closeModal = (id) => document.getElementById(id).style.display = 'none';
-    window.openProfileModal = (n, a) => {
-        document.getElementById('p-nickname').value = n;
-        document.getElementById('p-avatar-url').value = a;
+    // แก้ไขจุดที่เป็นปัญหา Error signOut()
+    window.appLogout = () => {
+        signOut(auth).then(() => {
+            location.reload();
+        }).catch(err => console.error(err));
+    };
+
+    window.openProfileUI = (n, a) => {
+        document.getElementById('edit-nick-input').value = n;
+        document.getElementById('edit-avatar-input').value = a;
         document.getElementById('profile-modal').style.display = 'flex';
     };
 
-    window.updateProfile = async () => {
-        await setDoc(doc(db, "users", auth.currentUser.uid), {
-            nickname: document.getElementById('p-nickname').value,
-            avatar: document.getElementById('p-avatar-url').value
-        });
+    window.closeModal = (id) => {
+        document.getElementById(id).style.display = 'none';
+    };
+
+    window.updateUserProfile = async () => {
+        const user = auth.currentUser;
+        if(!user) return;
+
+        const updatedNick = document.getElementById('edit-nick-input').value;
+        const updatedAva = document.getElementById('edit-avatar-input').value;
+
+        await setDoc(doc(db, "users", user.uid), {
+            nickname: updatedNick,
+            avatar: updatedAva
+        }, { merge: true });
+
+        alert("อัปเดตข้อมูลสำเร็จ!");
         location.reload();
     };
 
-    // --- 5. ADMIN TOOLS ---
-    window.addNewSeasonField = (valN = "", valI = "") => {
-        const container = document.getElementById('season-inputs-area');
-        const div = document.createElement('div');
-        div.className = "admin-row";
-        div.innerHTML = `
-            <input type="text" class="season-name-input" placeholder="ชื่อซีซัน/ตอน" value="${valN}">
-            <input type="text" class="season-img-input" placeholder="URL รูปซีซัน" value="${valI}">
-            <button onclick="this.parentElement.remove()" style="background:none; border:none; color:#E50914; cursor:pointer; font-weight:bold;">X</button>
-        `;
-        container.appendChild(div);
-    };
-
-    window.saveToFirebase = async () => {
-        const sns = document.querySelectorAll('.season-name-input');
-        const sis = document.querySelectorAll('.season-img-input');
-        let seasonData = [];
-        sns.forEach((input, i) => {
-            if(input.value) seasonData.push({ name: input.value, image: sis[i].value });
-        });
-
-        const payload = {
-            title: document.getElementById('adm-title').value,
-            image: document.getElementById('adm-img').value,
-            category: document.getElementById('adm-cat').value,
-            seasons: seasonData,
-            created: new Date()
-        };
-
-        if(currentEditingId) {
-            await updateDoc(doc(db, "all_anime", currentEditingId), payload);
-        } else {
-            await addDoc(collection(db, "all_anime"), payload);
-        }
-        location.reload();
-    };
-
-    window.prepareEdit = (id) => {
-        currentEditingId = id;
-        const item = window.masterAnimeList.find(x => x.id === id);
-        document.getElementById('adm-title').value = item.title;
-        document.getElementById('adm-img').value = item.image;
-        document.getElementById('adm-cat').value = item.category;
-        document.getElementById('season-inputs-area').innerHTML = "";
-        item.seasons?.forEach(s => window.addNewSeasonField(s.name, s.image));
-        window.scrollTo(0,0);
-    };
-
-    // --- 6. UTILITIES ---
-    window.handleSearch = () => {
-        const queryVal = document.getElementById('search-input').value.toLowerCase();
-        const filtered = window.masterAnimeList.filter(item => item.title.toLowerCase().includes(queryVal));
-        window.renderMainGrid(filtered);
-    };
-
-    window.filterCat = (cat) => {
-        const filtered = window.masterAnimeList.filter(item => item.category === cat);
-        window.renderMainGrid(filtered);
-    };
-
-    window.showHome = () => {
-        window.renderMainGrid(window.masterAnimeList);
-        document.getElementById('grid-label').innerText = "รายการแนะนำ";
-    };
-
-    window.showHistory = () => {
-        const grid = document.getElementById('main-grid');
-        grid.innerHTML = "";
-        document.getElementById('grid-label').innerText = "ประวัติการรับชมของคุณ";
-        
-        window.masterWatchedList.forEach(w => {
-            grid.innerHTML += `
-                <div class="card" style="scale:0.95;">
-                    <button onclick="window.deleteSingleHistory('${w.id}')" style="position:absolute; top:10px; right:10px; z-index:30; background:rgba(0,0,0,0.7); color:white; border:none; padding:5px; border-radius:5px; cursor:pointer;">ลบ</button>
-                    <img src="${w.image}">
-                    <div class="card-info">
-                        <span class="card-title">${w.mainTitle}</span>
-                        <span class="card-season">${w.seasonName}</span>
-                    </div>
-                </div>`;
-        });
-    };
-
-    window.deleteSingleHistory = async (id) => {
-        if(confirm("ลบประวัตินี้หรือไม่?")) {
-            await deleteDoc(doc(db, "user_watched", id));
-            await refreshData();
-            window.showHistory();
-        }
-    };
+    window.goHome = () => renderAll(window.fullDataList);
 </script>
 </body>
 </html>
