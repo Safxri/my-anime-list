@@ -3,29 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY HUB | v36 Absolute Master</title>
+    <title>MY HUB | v37 Clean Search & Profile</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root { --netflix-red: #E50914; --netflix-black: #141414; --nav-height: 70px; }
         * { box-sizing: border-box; }
         body { font-family: 'Kanit', sans-serif; background-color: var(--netflix-black); color: white; margin: 0; padding: 0; overflow-x: hidden; }
 
-        /* --- NAVBAR: Pixel Perfect Search --- */
+        /* --- NAVBAR: Clean Search (No Icon) --- */
         nav { background: rgba(0,0,0,0.95); padding: 0 4%; display: flex; align-items: center; justify-content: space-between; height: var(--nav-height); position: fixed; top: 0; width: 100%; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .nav-left { display: flex; align-items: center; gap: 25px; }
         .nav-logo { color: var(--netflix-red); font-size: 1.8rem; font-weight: 700; text-decoration: none; cursor: pointer; }
         .nav-menu { display: flex; list-style: none; gap: 20px; padding: 0; margin: 0; cursor: pointer; color: #e5e5e5; font-size: 0.9rem; }
         
         .nav-right-group { display: flex; align-items: center; gap: 15px; }
-        .search-box { position: relative; width: 280px; height: 36px; display: flex; align-items: center; }
-        .search-box input { background: rgba(255,255,255,0.15); border: 1px solid #444; border-radius: 20px; padding: 0 15px 0 42px; width: 100%; height: 100%; color: white; outline: none; font-size: 0.85rem; }
-        .search-icon { position: absolute; left: 14px; display: flex; align-items: center; justify-content: center; height: 100%; font-size: 1rem; color: #aaa; pointer-events: none; }
+        .search-box { width: 260px; height: 36px; }
+        .search-box input { 
+            background: rgba(255,255,255,0.12); 
+            border: 1px solid #333; 
+            border-radius: 20px; 
+            padding: 0 18px; 
+            width: 100%; 
+            height: 100%; 
+            color: white; 
+            outline: none; 
+            font-size: 0.85rem;
+            text-align: left;
+        }
 
-        /* --- PROFILE UI [NEW] --- */
-        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px 10px; border-radius: 8px; transition: 0.3s; }
-        .user-profile:hover { background: rgba(255,255,255,0.1); }
+        /* --- PROFILE UI --- */
+        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px 10px; border-radius: 8px; }
         .user-avatar { width: 32px; height: 32px; border-radius: 4px; object-fit: cover; background: #333; }
-        .user-name { font-size: 0.85rem; font-weight: 400; color: white; }
+        .user-name { font-size: 0.85rem; color: white; }
 
         /* --- CONTENT GRID: 280px --- */
         .container { padding: 90px 4% 60px; }
@@ -37,17 +46,17 @@
         .card img { width: 100%; height: 100%; object-fit: cover; }
         
         .card-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.95) 70%); padding: 40px 15px 15px; text-align: center; }
-        .card-title { font-size: 1.1rem; font-weight: 500; display: block; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .card-title { font-size: 1.1rem; font-weight: 500; display: block; }
         .card-season-label { font-size: 0.85rem; color: #2ed573; margin-top: 4px; display: block; } /* */
 
         .check-badge { position: absolute; top: 12px; left: 12px; background: #2ed573; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; z-index: 5; }
 
-        /* --- AUTH & MODALS --- */
-        .auth-card { max-width: 400px; margin: 15vh auto; background: rgba(0,0,0,0.9); padding: 50px; border-radius: 12px; text-align: center; } /* */
+        /* --- AUTH CARD --- */
+        .auth-card { max-width: 400px; margin: 15vh auto; background: rgba(0,0,0,0.9); padding: 50px; border-radius: 12px; text-align: center; }
         .btn-red { background: var(--netflix-red); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: 600; margin-top: 10px; }
         input, select { padding: 12px; background: #333; border: 1px solid #444; color: white; border-radius: 6px; width: 100%; margin-bottom: 10px; font-family: 'Kanit'; }
         
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
         .modal-content { background: #181818; width: 100%; max-width: 500px; padding: 35px; border-radius: 20px; text-align: center; }
         #admin-panel { display: none; background: #1a1a1a; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #333; }
     </style>
@@ -66,7 +75,6 @@
     </div>
     <div class="nav-right-group" id="nav-right" style="display:none;">
         <div class="search-box">
-            <div class="search-icon">🔍</div>
             <input type="text" id="search-input" placeholder="ค้นหาชื่อเรื่อง..." onkeyup="handleSearch()">
         </div>
         <div id="profile-trigger"></div>
@@ -83,7 +91,7 @@
 
 <div id="main-ui" class="container" style="display:none;">
     <div id="admin-panel">
-        <h3 style="color:var(--netflix-red); margin:0 0 15px 0;">จัดการข้อมูล</h3>
+        <h3 style="color:var(--netflix-red); margin:0 0 15px 0;">จัดการเนื้อหา</h3>
         <div style="display:grid; grid-template-columns: 2fr 2fr 1fr auto; gap:10px;">
             <input type="text" id="adm-title" placeholder="ชื่อเรื่อง">
             <input type="text" id="adm-img" placeholder="URL ปกหลัก">
@@ -100,20 +108,20 @@
 
 <div id="profile-modal" class="modal">
     <div class="modal-content">
-        <h2 style="margin-bottom:20px;">ตั้งค่าโปรไฟล์</h2>
+        <h2 style="margin-bottom:20px;">โปรไฟล์</h2>
         <input type="text" id="p-nick" placeholder="ชื่อเล่น">
         <input type="text" id="p-ava" placeholder="URL รูปโปรไฟล์">
-        <button class="btn-red" onclick="saveProfile()">บันทึกข้อมูล</button>
-        <button class="btn-red" style="background:#444;" onclick="handleLogout()">ออกจากระบบ</button>
+        <button class="btn-red" onclick="saveProfile()">บันทึก</button>
+        <button class="btn-red" style="background:#444;" onclick="handleLogout()">Logout</button>
         <button class="btn-red" style="background:none; color:#888;" onclick="closeModal('profile-modal')">ปิด</button>
     </div>
 </div>
 
 <div id="detail-modal" class="modal">
     <div class="modal-content" style="max-width:900px; text-align:left;">
-        <h2 id="m-title" style="margin-bottom:25px; border-bottom:1px solid #333; padding-bottom:10px;"></h2>
+        <h2 id="m-title" style="margin-bottom:20px;"></h2>
         <div id="m-list" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:20px;"></div>
-        <button class="btn-red" onclick="closeModal('detail-modal')" style="width:120px; margin-top:30px;">ปิด</button>
+        <button class="btn-red" onclick="closeModal('detail-modal')" style="width:100px; margin-top:20px;">ปิด</button>
     </div>
 </div>
 
@@ -136,6 +144,7 @@
         isReg = !isReg;
         document.getElementById('auth-title').innerText = isReg ? "Sign Up" : "Sign In";
         document.getElementById('auth-btn').innerText = isReg ? "สมัครสมาชิก" : "เข้าสู่ระบบ";
+        document.getElementById('auth-switch').innerHTML = isReg ? "มีบัญชีอยู่แล้ว? <b>เข้าสู่ระบบ</b>" : "ยังไม่มีบัญชี? <b>สมัครสมาชิกที่นี่</b>";
     };
     window.runAuth = () => {
         const m = document.getElementById('email').value, p = document.getElementById('password').value;
@@ -155,7 +164,7 @@
         }
     });
 
-    // --- PROFILE LOGIC ---
+    // --- PROFILE ---
     async function loadUserProfile(uid, email) {
         const d = await getDoc(doc(db, "users", uid));
         let nick = email.split('@')[0], ava = "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png";
@@ -171,14 +180,11 @@
         document.getElementById('profile-modal').style.display = 'flex';
     };
     window.saveProfile = async () => {
-        await setDoc(doc(db, "users", auth.currentUser.uid), { 
-            nickname: document.getElementById('p-nick').value, 
-            avatar: document.getElementById('p-ava').value 
-        });
+        await setDoc(doc(db, "users", auth.currentUser.uid), { nickname: document.getElementById('p-nick').value, avatar: document.getElementById('p-ava').value });
         location.reload();
     };
 
-    // --- DATA & RENDER ---
+    // --- LOGIC ---
     async function loadData() {
         const s = await getDocs(query(collection(db, "all_anime"), orderBy("created", "desc")));
         allData = s.docs.map(d => ({ id: d.id, ...d.data() })); render(allData);
@@ -200,9 +206,9 @@
         const g = document.getElementById('main-grid'); g.innerHTML = "";
         const isAdmin = auth.currentUser?.email === ADMIN_MAIL;
         list.forEach(item => {
-            const watchedCount = watchedList.filter(x => x.key.startsWith(item.title + "|")).length;
+            const watched = watchedList.filter(x => x.key.startsWith(item.title + "|")).length;
             const total = item.seasons?.length || 0;
-            const done = total > 0 && watchedCount >= total;
+            const done = total > 0 && watched >= total;
             g.innerHTML += `<div class="card">
                 ${done ? '<div class="check-badge">✓</div>' : ''}
                 ${isAdmin ? `<div style="position:absolute; top:10px; right:10px; z-index:10;"><button onclick="editItem('${item.id}')" style="background:#4dabf7; border:none; color:white; padding:4px 8px; border-radius:4px; font-size:10px; cursor:pointer;">แก้ไข</button></div>`:''}
@@ -215,12 +221,6 @@
         });
     }
 
-    // --- ADMIN ACTIONS ---
-    window.addSField = (n="", i="") => {
-        const d = document.createElement('div'); d.style = "display:grid; grid-template-columns:1fr 1fr auto; gap:10px; margin-top:5px;";
-        d.innerHTML = `<input type="text" class="sn" placeholder="ชื่อซีซัน" value="${n}"><input type="text" class="si" placeholder="URL ปก" value="${i}"><button onclick="this.parentElement.remove()" style="background:red; color:white; border:none; border-radius:4px; cursor:pointer;">ลบ</button>`;
-        document.getElementById('season-inputs').appendChild(d);
-    };
     window.saveToDB = async () => {
         const sns = document.querySelectorAll('.sn'), sis = document.querySelectorAll('.si'); let s = [];
         sns.forEach((x, i) => { if(x.value) s.push({ name: x.value, image: sis[i].value }); });
@@ -229,6 +229,11 @@
         else await addDoc(collection(db, "all_anime"), data);
         location.reload();
     };
+    window.addSField = (n="", i="") => {
+        const d = document.createElement('div'); d.style = "display:grid; grid-template-columns:1fr 1fr auto; gap:10px; margin-top:5px;";
+        d.innerHTML = `<input type="text" class="sn" placeholder="ชื่อซีซัน" value="${n}"><input type="text" class="si" placeholder="URL ปก" value="${i}"><button onclick="this.parentElement.remove()" style="background:red; color:white; border:none; border-radius:4px; cursor:pointer;">ลบ</button>`;
+        document.getElementById('season-inputs').appendChild(d);
+    };
     window.editItem = (id) => {
         editId = id; const item = allData.find(x => x.id === id);
         document.getElementById('adm-title').value = item.title; document.getElementById('adm-img').value = item.image;
@@ -236,7 +241,6 @@
         item.seasons?.forEach(s => addSField(s.name, s.image)); window.scrollTo(0,0);
     };
 
-    // --- UI ACTIONS ---
     window.openDetail = (id) => {
         const item = allData.find(x => x.id === id); document.getElementById('m-title').innerText = item.title;
         const l = document.getElementById('m-list'); l.innerHTML = "";
